@@ -5,8 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace DemirbasTakip.Controllers
-{//meraba
+{
     internal class PersonelController
     {
     }
+    //nbr
 }
