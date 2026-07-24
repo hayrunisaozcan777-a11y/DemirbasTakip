@@ -20,3 +20,8 @@ html {
 body {
   margin-bottom: 60px;
 }
+
+/* Pespembe (hotpink) başlık renk sınıfı */
+.pespembe {
+  color: #ff1493 !important;
+}

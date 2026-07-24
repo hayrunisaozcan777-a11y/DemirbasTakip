@@ -1,0 +1,40 @@
+﻿@model DemirbasTakip.Models.Personel
+@{
+    ViewData["Title"] = "Personel Sil";
+}
+
+<h3>Personel Sil</h3>
+
+<div class="card">
+    <div class="card-body">
+        @if (!(bool)ViewBag.SilinebilirMi)
+        {
+            <div class="alert alert-warning">
+                Bu personelin <strong>aktif rezervasyonu</strong> bulunduğu için silinemez.
+                Önce ilgili rezervasyonların iptal edilmesi gerekir.
+            </div>
+        }
+        else
+        {
+            <p>Bu personeli silmek istediğinize emin misiniz?</p>
+        }
+
+        <dl class="row">
+            <dt class="col-sm-3">Ad Soyad</dt>
+            <dd class="col-sm-9">@Model.AdSoyad</dd>
+            <dt class="col-sm-3">Departman</dt>
+            <dd class="col-sm-9">@Model.Departman</dd>
+            <dt class="col-sm-3">E-posta</dt>
+            <dd class="col-sm-9">@Model.Eposta</dd>
+        </dl>
+
+        <form asp-action="Delete" method="post">
+            <input type="hidden" asp-for="Id" />
+            @if ((bool)ViewBag.SilinebilirMi)
+            {
+                <button type="submit" class="btn btn-danger">Evet, Sil</button>
+            }
+            <a asp-action="Index" class="btn btn-secondary">Geri Dön</a>
+        </form>
+    </div>
+</div>
