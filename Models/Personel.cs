@@ -18,8 +18,7 @@ namespace DemirbasTakip.Models
 
         [Required(ErrorMessage = "E-posta zorunludur.")]
         [EmailAddress(ErrorMessage = "Geçerli bir e-posta adresi giriniz.")]
-        [Display(Name = "E-posta")]
-        public string Eposta { get; set; } = string.Empty;
+        public string? Eposta { get; set; }
 
         [Display(Name = "Aktif mi?")]
         public bool AktifMi { get; set; } = true;
