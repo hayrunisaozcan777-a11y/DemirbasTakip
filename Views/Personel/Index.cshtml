@@ -1,0 +1,62 @@
+﻿@model IEnumerable<DemirbasTakip.Models.Personel>
+@{
+    ViewData["Title"] = "Personel Listesi";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h3>Personel Listesi</h3>
+    <a asp-action="Create" class="btn btn-primary">+ Yeni Personel</a>
+</div>
+
+<form method="get" class="row g-2 mb-3">
+    <div class="col-auto">
+        <input type="text" name="arama" value="@ViewBag.Arama" class="form-control" placeholder="Ad soyad veya departman ara..." />
+    </div>
+    <div class="col-auto">
+        <button type="submit" class="btn btn-outline-secondary">Ara</button>
+    </div>
+</form>
+
+<div class="card">
+    <div class="card-body p-0">
+        <table class="table table-hover mb-0">
+            <thead>
+                <tr>
+                    <th>Ad Soyad</th>
+                    <th>Departman</th>
+                    <th>E-posta</th>
+                    <th>Durum</th>
+                    <th class="text-end">İşlemler</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var p in Model)
+                {
+                    <tr>
+                        <td>@p.AdSoyad</td>
+                        <td>@p.Departman</td>
+                        <td>@p.Eposta</td>
+                        <td>
+                            @if (p.AktifMi)
+                            {
+                                <span class="badge bg-success">Aktif</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-secondary">Pasif</span>
+                            }
+                        </td>
+                        <td class="text-end">
+                            <a asp-action="Edit" asp-route-id="@p.Id" class="btn btn-sm btn-outline-primary">Düzenle</a>
+                            <a asp-action="Delete" asp-route-id="@p.Id" class="btn btn-sm btn-outline-danger">Sil</a>
+                        </td>
+                    </tr>
+                }
+                @if (!Model.Any())
+                {
+                    <tr><td colspan="5" class="text-center text-muted py-4">Kayıt bulunamadı.</td></tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
