@@ -1,8 +1,83 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+﻿@model DemirbasTakip.ViewModels.DashboardViewModel
+@{
+    ViewData["Title"] = "Ana Sayfa - Gösterge Paneli";
 }
 
-<div class="text-center">
-   <h1 class="display-4" style="color: hotpink;">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="container-fluid p-0">
+    <h2 class="mb-4">📊 Demirbaş Takip Sistemi - Genel Durum</h2>
+
+    <!-- İstatistik Kartları -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card text-white bg-primary mb-3 shadow-sm">
+                <div class="card-body">
+                    <h6 class="card-title">Aktif Personeller</h6>
+                    <h2 class="card-text fw-bold">@Model.ToplamPersonelSayisi</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-white bg-success mb-3 shadow-sm">
+                <div class="card-body">
+                    <h6 class="card-title">Aktif Kaynaklar</h6>
+                    <h2 class="card-text fw-bold">@Model.ToplamKaynakSayisi</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-white bg-info mb-3 shadow-sm">
+                <div class="card-body">
+                    <h6 class="card-title">Aktif Rezervasyonlar</h6>
+                    <h2 class="card-text fw-bold">@Model.AktifRezervasyonSayisi</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-white bg-warning mb-3 shadow-sm">
+                <div class="card-body">
+                    <h6 class="card-title">Bugünkü Rezervasyonlar</h6>
+                    <h2 class="card-text fw-bold">@Model.BugunkuRezervasyonSayisi</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Son Rezervasyonlar Tablosu -->
+    <div class="card shadow-sm">
+        <div class="card-header bg-light">
+            <h5 class="m-0 font-weight-bold text-dark">📋 Son Eklenen Rezervasyonlar</h5>
+        </div>
+        <div class="card-body">
+            @if (Model.SonRezervasyonlar != null && Model.SonRezervasyonlar.Any())
+            {
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Personel</th>
+                                <th>Kaynak / Demirbaş</th>
+                                <th>Başlangıç</th>
+                                <th>Bitiş</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var r in Model.SonRezervasyonlar)
+                            {
+                                <tr>
+                                    <td>@(r.Personel?.AdSoyad ?? "-")</td>
+                                    <td>@(r.Kaynak?.Ad ?? "-")</td>
+                                    <td>@r.BaslangicZamani.ToString("dd.MM.yyyy HH:mm")</td>
+                                    <td>@r.BitisZamani.ToString("dd.MM.yyyy HH:mm")</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+            else
+            {
+                <p class="text-muted m-0">Henüz gösterilecek aktif bir rezervervasyon kaydı bulunmuyor.</p>
+            }
+        </div>
+    </div>
 </div>
