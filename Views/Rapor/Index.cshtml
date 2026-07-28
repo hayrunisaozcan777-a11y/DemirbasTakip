@@ -1,0 +1,95 @@
+﻿@model IEnumerable<DemirbasTakip.Models.Rezervasyon>
+@{
+    ViewData["Title"] = "Raporlar";
+}
+
+<h3 class="mb-4">Rezervasyon Raporu</h3>
+
+<form method="get" class="row g-2 mb-4">
+    <div class="col-md-3">
+        <label class="form-label">Personel</label>
+        <select name="personelId" class="form-select" asp-items="ViewBag.Personeller">
+            <option value="">Tüm Personel</option>
+        </select>
+    </div>
+    <div class="col-md-3">
+        <label class="form-label">Kaynak</label>
+        <select name="kaynakId" class="form-select" asp-items="ViewBag.Kaynaklar">
+            <option value="">Tüm Kaynaklar</option>
+        </select>
+    </div>
+    <div class="col-md-2">
+        <label class="form-label">Başlangıç Tarihi</label>
+        <input type="date" name="baslangic" value="@ViewBag.Baslangic" class="form-control" />
+    </div>
+    <div class="col-md-2">
+        <label class="form-label">Bitiş Tarihi</label>
+        <input type="date" name="bitis" value="@ViewBag.Bitis" class="form-control" />
+    </div>
+    <div class="col-md-2 d-flex align-items-end">
+        <button type="submit" class="btn btn-outline-secondary me-2">Filtrele</button>
+        <a asp-action="Index" class="btn btn-outline-dark">Temizle</a>
+    </div>
+</form>
+
+<div class="row g-3 mb-4">
+    <div class="col-md-4">
+        <div class="dashboard-card" style="background-color:#6c757d;">
+            <div class="small">Toplam Kayıt</div>
+            <h3>@ViewBag.ToplamKayit</h3>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="dashboard-card" style="background-color:#198754;">
+            <div class="small">Aktif</div>
+            <h3>@ViewBag.AktifSayisi</h3>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="dashboard-card" style="background-color:#dc3545;">
+            <div class="small">İptal Edildi</div>
+            <h3>@ViewBag.IptalSayisi</h3>
+        </div>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-body p-0">
+        <table class="table table-hover mb-0">
+            <thead>
+                <tr>
+                    <th>Personel</th>
+                    <th>Kaynak</th>
+                    <th>Başlangıç</th>
+                    <th>Bitiş</th>
+                    <th>Durum</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var r in Model)
+                {
+                    <tr>
+                        <td>@r.Personel?.AdSoyad</td>
+                        <td>@r.Kaynak?.Ad</td>
+                        <td>@r.BaslangicZamani.ToString("dd.MM.yyyy HH:mm")</td>
+                        <td>@r.BitisZamani.ToString("dd.MM.yyyy HH:mm")</td>
+                        <td>
+                            @if (r.Durum == DemirbasTakip.Models.RezervasyonDurumu.Aktif)
+                            {
+                                <span class="badge bg-success">Aktif</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-danger">İptal Edildi</span>
+                            }
+                        </td>
+                    </tr>
+                }
+                @if (!Model.Any())
+                {
+                    <tr><td colspan="5" class="text-center text-muted py-4">Kayıt bulunamadı.</td></tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
