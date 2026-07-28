@@ -1,41 +1,36 @@
-﻿@model DemirbasTakip.ViewModels.DashboardViewModel
+﻿@model IEnumerable<DemirbasTakip.Models.Rezervasyon>
 @{
-    ViewData["Title"] = "Dashboard";
+    ViewData["Title"] = "Rezervasyonlar";
 }
 
-<h3 class="mb-4">Dashboard</h3>
-
-<div class="row g-3 mb-4">
-    <div class="col-md-3">
-        <div class="dashboard-card" style="background-color:#0d6efd;">
-            <div class="small">Toplam Personel</div>
-            <h3>@Model.ToplamPersonelSayisi</h3>
-        </div>
-    </div>
-    <div class="col-md-3">
-        <div class="dashboard-card" style="background-color:#198754;">
-            <div class="small">Toplam Kaynak</div>
-            <h3>@Model.ToplamKaynakSayisi</h3>
-        </div>
-    </div>
-    <div class="col-md-3">
-        <div class="dashboard-card" style="background-color:#fd7e14;">
-            <div class="small">Aktif Rezervasyon</div>
-            <h3>@Model.AktifRezervasyonSayisi</h3>
-        </div>
-    </div>
-    <div class="col-md-3">
-        <div class="dashboard-card" style="background-color:#6f42c1;">
-            <div class="small">Bugünkü Rezervasyon</div>
-            <h3>@Model.BugunkuRezervasyonSayisi</h3>
-        </div>
-    </div>
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h3>Rezervasyonlar</h3>
+    <a asp-action="Create" class="btn btn-primary">+ Yeni Rezervasyon</a>
 </div>
 
-<div class="card">
-    <div class="card-header">
-        <strong>Son Rezervasyonlar</strong>
+<form method="get" class="row g-2 mb-3">
+    <div class="col-auto">
+        <select name="kaynakId" class="form-select" asp-items="ViewBag.Kaynaklar">
+            <option value="">Tüm Kaynaklar</option>
+        </select>
     </div>
+    <div class="col-auto">
+        <select name="personelId" class="form-select" asp-items="ViewBag.Personeller">
+            <option value="">Tüm Personel</option>
+        </select>
+    </div>
+    <div class="col-auto">
+        <input type="date" name="tarih" value="@ViewBag.Tarih" class="form-control" />
+    </div>
+    <div class="col-auto">
+        <button type="submit" class="btn btn-outline-secondary">Filtrele</button>
+    </div>
+    <div class="col-auto">
+        <a asp-action="Index" class="btn btn-outline-dark">Temizle</a>
+    </div>
+</form>
+
+<div class="card">
     <div class="card-body p-0">
         <table class="table table-hover mb-0">
             <thead>
@@ -44,34 +39,8 @@
                     <th>Kaynak</th>
                     <th>Başlangıç</th>
                     <th>Bitiş</th>
+                    <th>Açıklama</th>
                     <th>Durum</th>
+                    <th class="text-end">İşlemler</th>
                 </tr>
             </thead>
-            <tbody>
-                @foreach (var r in Model.SonRezervasyonlar)
-                {
-                    <tr>
-                        <td>@r.Personel?.AdSoyad</td>
-                        <td>@r.Kaynak?.Ad</td>
-                        <td>@r.BaslangicZamani.ToString("dd.MM.yyyy HH:mm")</td>
-                        <td>@r.BitisZamani.ToString("dd.MM.yyyy HH:mm")</td>
-                        <td>
-                            @if (r.Durum == DemirbasTakip.Models.RezervasyonDurumu.Aktif)
-                            {
-                                <span class="badge bg-success">Aktif</span>
-                            }
-                            else
-                            {
-                                <span class="badge bg-danger">İptal Edildi</span>
-                            }
-                        </td>
-                    </tr>
-                }
-                @if (!Model.SonRezervasyonlar.Any())
-                {
-                    <tr><td colspan="5" class="text-center text-muted py-4">Henüz rezervasyon yok.</td></tr>
-                }
-            </tbody>
-        </table>
-    </div>
-</div>
