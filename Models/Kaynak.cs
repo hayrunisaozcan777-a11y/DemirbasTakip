@@ -4,9 +4,16 @@ namespace DemirbasTakip.Models
 {
     public enum KaynakTuru
     {
+        [Display(Name = "Toplantı Odası")]
         ToplantiOdasi = 1,
+
+        [Display(Name = "Projeksiyon")]
         Projeksiyon = 2,
+
+        [Display(Name = "Araç")]
         Arac = 3,
+
+        [Display(Name = "Diğer Ekipman")]
         DigerEkipman = 4
     }
 
