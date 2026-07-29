@@ -1,42 +1,39 @@
 ﻿@model DemirbasTakip.ViewModels.KullaniciFormViewModel
-@using DemirbasTakip.Models
 @{
-    ViewData["Title"] = "Yeni Kullanıcı Ekle";
+    ViewData["Title"] = "Yeni Kullanıcı";
 }
 
-<div class="container-fluid p-0">
-    <h2 class="mb-4">➕ Yeni Kullanıcı Ekle</h2>
+<h3>Yeni Kullanıcı Ekle</h3>
 
-    <div class="row">
-        <div class="col-md-6">
-            <div class="card shadow-sm">
-                <div class="card-body">
-                    <form asp-action="Create" method="post">
-                        <div class="mb-3">
-                            <label asp-for="KullaniciAdi" class="form-label"></label>
-                            <input asp-for="KullaniciAdi" class="form-control" />
-                            <span asp-validation-for="KullaniciAdi" class="text-danger"></span>
-                        </div>
+<div class="card">
+    <div class="card-body">
+        <form asp-action="Create" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
 
-                        <div class="mb-3">
-                            <label asp-for="Sifre" class="form-label"></label>
-                            <input asp-for="Sifre" class="form-control" />
-                            <span asp-validation-for="Sifre" class="text-danger"></span>
-                        </div>
-
-                        <div class="mb-3">
-                            <label asp-for="Rol" class="form-label"></label>
-                            <select asp-for="Rol" asp-items="Html.GetEnumSelectList<KullaniciRol>()" class="form-select"></select>
-                            <span asp-validation-for="Rol" class="text-danger"></span>
-                        </div>
-
-                        <div class="d-flex justify-content-between pt-2">
-                            <a asp-action="Index" class="btn btn-secondary">İptal</a>
-                            <button type="submit" class="btn btn-success">Kaydet</button>
-                        </div>
-                    </form>
-                </div>
+            <div class="mb-3">
+                <label asp-for="KullaniciAdi" class="form-label"></label>
+                <input asp-for="KullaniciAdi" class="form-control" />
+                <span asp-validation-for="KullaniciAdi" class="text-danger"></span>
             </div>
-        </div>
+
+            <div class="mb-3">
+                <label asp-for="Sifre" class="form-label"></label>
+                <input asp-for="Sifre" class="form-control" />
+                <span asp-validation-for="Sifre" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Rol" class="form-label"></label>
+                <select asp-for="Rol" class="form-select" asp-items="Html.GetEnumSelectList<DemirbasTakip.Models.KullaniciRol>()"></select>
+                <span asp-validation-for="Rol" class="text-danger"></span>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Kaydet</button>
+            <a asp-action="Index" class="btn btn-secondary">Vazgeç</a>
+        </form>
     </div>
 </div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
