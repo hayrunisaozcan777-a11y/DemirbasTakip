@@ -34,10 +34,10 @@
 								<a class="nav-link text-dark" asp-area="" asp-controller="Rezervasyon" asp-action="Index">Rezervasyonlar</a>
 							</li>
 							<li class="nav-item">
-								<a class="nav-link text-dark" asp-controller="Kullanici" asp-action="Index">Kullanıcılar</a>
+								<a class="nav-link text-dark" asp-area="" asp-controller="Rapor" asp-action="Index">Raporlar</a>
 							</li>
 							<li class="nav-item">
-								<a class="nav-link text-dark" asp-area="" asp-controller="Rapor" asp-action="Index">Raporlar</a>
+								<a class="nav-link text-dark" asp-area="" asp-controller="Kullanici" asp-action="Index">Kullanıcılar</a>
 							</li>
 							}
 						</ul>
@@ -77,12 +77,11 @@
 			</main>
 		</div>
 
-		<footer class="border-top text-muted py-3 mt-5">
-			<div class="container text-center">
-				copy; 2026 - DemirbasTakip - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+		<footer class="border-top footer text-muted">
+			<div class="container">
+				&copy; 2026 - DemirbasTakip - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
 			</div>
 		</footer>
-
 		<script src="~/lib/jquery/dist/jquery.min.js"></script>
 		<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 		<script src="~/js/site.js" asp-append-version="true"></script>
