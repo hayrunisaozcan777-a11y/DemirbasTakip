@@ -9,36 +9,44 @@
     <!-- İstatistik Kartları -->
     <div class="row mb-4">
         <div class="col-md-3">
-            <div class="card text-white bg-primary mb-3 shadow-sm">
-                <div class="card-body">
-                    <h6 class="card-title">Aktif Personeller</h6>
-                    <h2 class="card-text fw-bold">@Model.ToplamPersonelSayisi</h2>
+            <a asp-controller="Personel" asp-action="Index" class="text-decoration-none">
+                <div class="card text-white bg-primary mb-3 shadow-sm">
+                    <div class="card-body">
+                        <h6 class="card-title">Aktif Personeller</h6>
+                        <h2 class="card-text fw-bold">@Model.ToplamPersonelSayisi</h2>
+                    </div>
                 </div>
-            </div>
+            </a>
         </div>
         <div class="col-md-3">
-            <div class="card text-white bg-success mb-3 shadow-sm">
-                <div class="card-body">
-                    <h6 class="card-title">Aktif Demirbaşlar</h6>
-                    <h2 class="card-text fw-bold">@Model.ToplamDemirbasSayisi</h2>
+            <a asp-controller="Demirbas" asp-action="Index" class="text-decoration-none">
+                <div class="card text-white bg-success mb-3 shadow-sm">
+                    <div class="card-body">
+                        <h6 class="card-title">Aktif Demirbaşlar</h6>
+                        <h2 class="card-text fw-bold">@Model.ToplamDemirbasSayisi</h2>
+                    </div>
                 </div>
-            </div>
+            </a>
         </div>
         <div class="col-md-3">
-            <div class="card text-white bg-info mb-3 shadow-sm">
-                <div class="card-body">
-                    <h6 class="card-title">Aktif Zimmetler</h6>
-                    <h2 class="card-text fw-bold">@Model.AktifZimmetSayisi</h2>
+            <a asp-controller="Zimmet" asp-action="Index" class="text-decoration-none">
+                <div class="card text-white bg-info mb-3 shadow-sm">
+                    <div class="card-body">
+                        <h6 class="card-title">Aktif Zimmetler</h6>
+                        <h2 class="card-text fw-bold">@Model.AktifZimmetSayisi</h2>
+                    </div>
                 </div>
-            </div>
+            </a>
         </div>
         <div class="col-md-3">
-            <div class="card text-white bg-warning mb-3 shadow-sm">
-                <div class="card-body">
-                    <h6 class="card-title">Bugünkü Zimmetler</h6>
-                    <h2 class="card-text fw-bold">@Model.BugunkuZimmetSayisi</h2>
+            <a asp-controller="Zimmet" asp-action="Index" class="text-decoration-none">
+                <div class="card text-white bg-warning mb-3 shadow-sm">
+                    <div class="card-body">
+                        <h6 class="card-title">Bugünkü Zimmetler</h6>
+                        <h2 class="card-text fw-bold">@Model.BugunkuZimmetSayisi</h2>
+                    </div>
                 </div>
-            </div>
+            </a>
         </div>
     </div>
 
