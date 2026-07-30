@@ -12,8 +12,8 @@ namespace DemirbasTakip.Data
 
         public DbSet<Kullanici> Kullanicilar => Set<Kullanici>();
         public DbSet<Personel> Personeller => Set<Personel>();
-        public DbSet<Kaynak> Kaynaklar => Set<Kaynak>();
-        public DbSet<Rezervasyon> Rezervasyonlar => Set<Rezervasyon>();
+        public DbSet<Demirbas> Demirbaslar => Set<Demirbas>();
+        public DbSet<Zimmet> Zimmetler => Set<Zimmet>();
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -25,23 +25,22 @@ namespace DemirbasTakip.Data
                 .HasForeignKey(k => k.PersonelId)
                 .OnDelete(DeleteBehavior.SetNull);
 
-            modelBuilder.Entity<Rezervasyon>()
-                .HasOne(r => r.Personel)
-                .WithMany(p => p.Rezervasyonlar)
-                .HasForeignKey(r => r.PersonelId)
+            modelBuilder.Entity<Zimmet>()
+                .HasOne(z => z.Personel)
+                .WithMany(p => p.Zimmetler)
+                .HasForeignKey(z => z.PersonelId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            modelBuilder.Entity<Rezervasyon>()
-                .HasOne(r => r.Kaynak)
-                .WithMany(k => k.Rezervasyonlar)
-                .HasForeignKey(r => r.KaynakId)
+            modelBuilder.Entity<Zimmet>()
+                .HasOne(z => z.Demirbas)
+                .WithMany(d => d.Zimmetler)
+                .HasForeignKey(z => z.DemirbasId)
                 .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<Kullanici>().Property(k => k.Rol).HasConversion<string>();
-            modelBuilder.Entity<Kaynak>().Property(k => k.Tur).HasConversion<string>();
-            modelBuilder.Entity<Rezervasyon>().Property(r => r.Durum).HasConversion<string>();
+            modelBuilder.Entity<Demirbas>().Property(d => d.Kategori).HasConversion<string>();
+            modelBuilder.Entity<Zimmet>().Property(z => z.Durum).HasConversion<string>();
 
-            // Seed - varsayılan admin kullanıcısı: admin / Admin123!
             modelBuilder.Entity<Kullanici>().HasData(new Kullanici
             {
                 Id = 1,

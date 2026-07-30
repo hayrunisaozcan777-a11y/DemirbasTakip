@@ -23,6 +23,6 @@ namespace DemirbasTakip.Models
         [Display(Name = "Aktif mi?")]
         public bool AktifMi { get; set; } = true;
 
-        public ICollection<Rezervasyon> Rezervasyonlar { get; set; } = new List<Rezervasyon>();
+        public ICollection<Zimmet> Zimmetler { get; set; } = new List<Zimmet>();
     }
 }

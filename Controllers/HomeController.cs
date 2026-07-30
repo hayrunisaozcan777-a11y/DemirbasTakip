@@ -23,18 +23,17 @@ namespace DemirbasTakip.Controllers
             var vm = new DashboardViewModel
             {
                 ToplamPersonelSayisi = await _context.Personeller.CountAsync(p => p.AktifMi),
-                ToplamKaynakSayisi = await _context.Kaynaklar.CountAsync(k => k.AktifMi),
-                AktifRezervasyonSayisi = await _context.Rezervasyonlar.CountAsync(r => r.Durum == RezervasyonDurumu.Aktif),
-                BugunkuRezervasyonSayisi = await _context.Rezervasyonlar
-                    .CountAsync(r => r.Durum == RezervasyonDurumu.Aktif && r.BaslangicZamani.Date == DateTime.Now.Date),
-                SonRezervasyonlar = await _context.Rezervasyonlar
-                    .Include(r => r.Personel)
-                    .Include(r => r.Kaynak)
-                    .OrderByDescending(r => r.OlusturmaTarihi)
+                ToplamDemirbasSayisi = await _context.Demirbaslar.CountAsync(d => d.AktifMi),
+                AktifZimmetSayisi = await _context.Zimmetler.CountAsync(z => z.Durum == ZimmetDurumu.Aktif),
+                BugunkuZimmetSayisi = await _context.Zimmetler
+                    .CountAsync(z => z.Durum == ZimmetDurumu.Aktif && z.ZimmetTarihi.Date == DateTime.Now.Date),
+                SonZimmetler = await _context.Zimmetler
+                    .Include(z => z.Personel)
+                    .Include(z => z.Demirbas)
+                    .OrderByDescending(z => z.ZimmetTarihi)
                     .Take(5)
                     .ToListAsync()
             };
-
             return View(vm);
         }
 

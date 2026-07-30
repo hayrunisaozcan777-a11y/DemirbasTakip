@@ -1,0 +1,46 @@
+﻿@model IEnumerable<DemirbasTakip.Models.Zimmet>
+@{
+    ViewData["Title"] = "Zimmet İşlemleri";
+}
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h3>Zimmet İşlemleri</h3>
+    <a asp-action="Create" class="btn btn-primary">+ Yeni Zimmet</a>
+</div>
+<form method="get" class="row g-2 mb-3">
+    <div class="col-auto">
+        <select name="demirbasId" class="form-select" asp-items="ViewBag.Demirbaslar"><option value="">Tüm Demirbaşlar</option></select>
+    </div>
+    <div class="col-auto">
+        <select name="personelId" class="form-select" asp-items="ViewBag.Personeller"><option value="">Tüm Personel</option></select>
+    </div>
+    <div class="col-auto"><button type="submit" class="btn btn-outline-secondary">Filtrele</button></div>
+    <div class="col-auto"><a asp-action="Index" class="btn btn-outline-dark">Temizle</a></div>
+</form>
+<div class="card"><div class="card-body p-0">
+<table class="table table-hover mb-0">
+<thead><tr><th>Personel</th><th>Demirbaş</th><th>Zimmet Tarihi</th><th>İade Tarihi</th><th>Not</th><th>Durum</th><th class="text-end">İşlemler</th></tr></thead>
+<tbody>
+@foreach (var z in Model)
+{
+<tr>
+<td>@z.Personel?.AdSoyad</td>
+<td>@z.Demirbas?.Ad</td>
+<td>@z.ZimmetTarihi.ToString("dd.MM.yyyy HH:mm")</td>
+<td>@(z.IadeTarihi?.ToString("dd.MM.yyyy HH:mm") ?? "-")</td>
+<td>@z.Not</td>
+<td>
+@if (z.Durum == DemirbasTakip.Models.ZimmetDurumu.Aktif)
+{ <span class="badge bg-success">Zimmetli</span> }
+else
+{ <span class="badge bg-secondary">İade Edildi</span> }
+</td>
+<td class="text-end">
+@if (z.Durum == DemirbasTakip.Models.ZimmetDurumu.Aktif)
+{ <a asp-action="Iade" asp-route-id="@z.Id" class="btn btn-sm btn-outline-warning">İade Al</a> }
+</td>
+</tr>
+}
+@if (!Model.Any()) { <tr><td colspan="7" class="text-center text-muted py-4">Kayıt bulunamadı.</td></tr> }
+</tbody>
+</table>
+</div></div>

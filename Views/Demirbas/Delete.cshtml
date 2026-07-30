@@ -1,0 +1,14 @@
+﻿@model DemirbasTakip.Models.Demirbas
+@{ ViewData["Title"] = "Demirbaş Sil"; }
+<h3>Demirbaş Sil</h3>
+<div class="card"><div class="card-body">
+@if (!(bool)ViewBag.SilinebilirMi)
+{ <div class="alert alert-warning">Bu demirbaşın <strong>aktif zimmeti</strong> bulunduğu için silinemez.</div> }
+else { <p>Bu demirbaşı silmek istediğinize emin misiniz?</p> }
+<dl class="row"><dt class="col-sm-3">Kod</dt><dd class="col-sm-9">@Model.DemirbasKodu</dd><dt class="col-sm-3">Ad</dt><dd class="col-sm-9">@Model.Ad</dd></dl>
+<form asp-action="Delete" method="post">
+<input type="hidden" asp-for="Id" />
+@if ((bool)ViewBag.SilinebilirMi) { <button type="submit" class="btn btn-danger">Evet, Sil</button> }
+<a asp-action="Index" class="btn btn-secondary">Geri Dön</a>
+</form>
+</div></div>

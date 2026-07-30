@@ -1,0 +1,17 @@
+﻿@model DemirbasTakip.Models.Zimmet
+@{ ViewData["Title"] = "Zimmet İade"; }
+<h3>Demirbaş İade Al</h3>
+<div class="card"><div class="card-body">
+<p>Bu demirbaşın iadesini almak istediğinize emin misiniz?</p>
+<dl class="row">
+<dt class="col-sm-3">Personel</dt><dd class="col-sm-9">@Model.Personel?.AdSoyad</dd>
+<dt class="col-sm-3">Demirbaş</dt><dd class="col-sm-9">@Model.Demirbas?.Ad</dd>
+<dt class="col-sm-3">Zimmet Tarihi</dt><dd class="col-sm-9">@Model.ZimmetTarihi.ToString("dd.MM.yyyy HH:mm")</dd>
+<dt class="col-sm-3">Not</dt><dd class="col-sm-9">@Model.Not</dd>
+</dl>
+<form asp-action="Iade" method="post">
+<input type="hidden" asp-for="Id" />
+<button type="submit" class="btn btn-warning">Evet, İade Al</button>
+<a asp-action="Index" class="btn btn-secondary">Geri Dön</a>
+</form>
+</div></div>

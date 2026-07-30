@@ -1,0 +1,31 @@
+﻿@model DemirbasTakip.ViewModels.ZimmetFormViewModel
+@{ ViewData["Title"] = "Yeni Zimmet"; }
+<h3>Yeni Zimmet Oluştur</h3>
+<div class="card"><div class="card-body">
+<form asp-action="Create" method="post">
+<div asp-validation-summary="All" class="text-danger mb-3"></div>
+<div class="mb-3">
+    <label asp-for="PersonelId" class="form-label"></label>
+    <select asp-for="PersonelId" class="form-select" asp-items="Model.PersonelListesi"><option value="">-- Personel Seçiniz --</option></select>
+    <span asp-validation-for="PersonelId" class="text-danger"></span>
+</div>
+<div class="mb-3">
+    <label asp-for="DemirbasId" class="form-label"></label>
+    <select asp-for="DemirbasId" class="form-select" asp-items="Model.DemirbasListesi"><option value="">-- Demirbaş Seçiniz --</option></select>
+    <span asp-validation-for="DemirbasId" class="text-danger"></span>
+    <div class="form-text">Sadece aktif ve şu an zimmetli olmayan demirbaşlar listelenir.</div>
+</div>
+<div class="mb-3">
+    <label asp-for="ZimmetTarihi" class="form-label"></label>
+    <input asp-for="ZimmetTarihi" class="form-control" type="datetime-local" />
+    <span asp-validation-for="ZimmetTarihi" class="text-danger"></span>
+</div>
+<div class="mb-3">
+    <label asp-for="Not" class="form-label"></label>
+    <textarea asp-for="Not" class="form-control" rows="3"></textarea>
+</div>
+<button type="submit" class="btn btn-primary">Zimmetle</button>
+<a asp-action="Index" class="btn btn-secondary">Vazgeç</a>
+</form>
+</div></div>
+@section Scripts { @{await Html.RenderPartialAsync("_ValidationScriptsPartial");} }

@@ -19,55 +19,64 @@
         <div class="col-md-3">
             <div class="card text-white bg-success mb-3 shadow-sm">
                 <div class="card-body">
-                    <h6 class="card-title">Aktif Kaynaklar</h6>
-                    <h2 class="card-text fw-bold">@Model.ToplamKaynakSayisi</h2>
+                    <h6 class="card-title">Aktif Demirbaşlar</h6>
+                    <h2 class="card-text fw-bold">@Model.ToplamDemirbasSayisi</h2>
                 </div>
             </div>
         </div>
         <div class="col-md-3">
             <div class="card text-white bg-info mb-3 shadow-sm">
                 <div class="card-body">
-                    <h6 class="card-title">Aktif Rezervasyonlar</h6>
-                    <h2 class="card-text fw-bold">@Model.AktifRezervasyonSayisi</h2>
+                    <h6 class="card-title">Aktif Zimmetler</h6>
+                    <h2 class="card-text fw-bold">@Model.AktifZimmetSayisi</h2>
                 </div>
             </div>
         </div>
         <div class="col-md-3">
             <div class="card text-white bg-warning mb-3 shadow-sm">
                 <div class="card-body">
-                    <h6 class="card-title">Bugünkü Rezervasyonlar</h6>
-                    <h2 class="card-text fw-bold">@Model.BugunkuRezervasyonSayisi</h2>
+                    <h6 class="card-title">Bugünkü Zimmetler</h6>
+                    <h2 class="card-text fw-bold">@Model.BugunkuZimmetSayisi</h2>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Son Rezervasyonlar Tablosu -->
+    <!-- Son Zimmetler Tablosu -->
     <div class="card shadow-sm">
         <div class="card-header bg-light">
-            <h5 class="m-0 font-weight-bold text-dark">📋 Son Eklenen Rezervasyonlar</h5>
+            <h5 class="m-0 font-weight-bold text-dark">📋 Son Zimmetlenen Demirbaşlar</h5>
         </div>
         <div class="card-body">
-            @if (Model.SonRezervasyonlar != null && Model.SonRezervasyonlar.Any())
+            @if (Model.SonZimmetler != null && Model.SonZimmetler.Any())
             {
                 <div class="table-responsive">
                     <table class="table table-hover align-middle">
                         <thead class="table-light">
                             <tr>
                                 <th>Personel</th>
-                                <th>Kaynak / Demirbaş</th>
-                                <th>Başlangıç</th>
-                                <th>Bitiş</th>
+                                <th>Demirbaş</th>
+                                <th>Zimmet Tarihi</th>
+                                <th>Durum</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach (var r in Model.SonRezervasyonlar)
+                            @foreach (var z in Model.SonZimmetler)
                             {
                                 <tr>
-                                    <td>@(r.Personel?.AdSoyad ?? "-")</td>
-                                    <td>@(r.Kaynak?.Ad ?? "-")</td>
-                                    <td>@r.BaslangicZamani.ToString("dd.MM.yyyy HH:mm")</td>
-                                    <td>@r.BitisZamani.ToString("dd.MM.yyyy HH:mm")</td>
+                                    <td>@(z.Personel?.AdSoyad ?? "-")</td>
+                                    <td>@(z.Demirbas?.Ad ?? "-")</td>
+                                    <td>@z.ZimmetTarihi.ToString("dd.MM.yyyy HH:mm")</td>
+                                    <td>
+                                        @if (z.Durum == DemirbasTakip.Models.ZimmetDurumu.Aktif)
+                                        {
+                                            <span class="badge bg-success">Zimmetli</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-secondary">İade Edildi</span>
+                                        }
+                                    </td>
                                 </tr>
                             }
                         </tbody>
@@ -76,7 +85,7 @@
             }
             else
             {
-                <p class="text-muted m-0">Henüz gösterilecek aktif bir rezervasyon kaydı bulunmuyor.</p>
+                <p class="text-muted m-0">Henüz gösterilecek bir zimmet kaydı bulunmuyor.</p>
             }
         </div>
     </div>

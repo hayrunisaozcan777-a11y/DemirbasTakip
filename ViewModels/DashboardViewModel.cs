@@ -3,10 +3,10 @@
     public class DashboardViewModel
     {
         public int ToplamPersonelSayisi { get; set; }
-        public int ToplamKaynakSayisi { get; set; }
-        public int AktifRezervasyonSayisi { get; set; }
-        public int BugunkuRezervasyonSayisi { get; set; }
+        public int ToplamDemirbasSayisi { get; set; }
+        public int AktifZimmetSayisi { get; set; }
+        public int BugunkuZimmetSayisi { get; set; }
 
-        public List<DemirbasTakip.Models.Rezervasyon> SonRezervasyonlar { get; set; } = new();
+        public List<DemirbasTakip.Models.Zimmet> SonZimmetler { get; set; } = new();
     }
 }

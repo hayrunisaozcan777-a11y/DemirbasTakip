@@ -1,9 +1,9 @@
-﻿@model IEnumerable<DemirbasTakip.Models.Rezervasyon>
+﻿@model IEnumerable<DemirbasTakip.Models.Zimmet>
 @{
     ViewData["Title"] = "Raporlar";
 }
 
-<h3 class="mb-4">Rezervasyon Raporu</h3>
+<h3 class="mb-4">Zimmet Raporu</h3>
 
 <form method="get" class="row g-2 mb-4">
     <div class="col-md-3">
@@ -13,9 +13,9 @@
         </select>
     </div>
     <div class="col-md-3">
-        <label class="form-label">Kaynak</label>
-        <select name="kaynakId" class="form-select" asp-items="ViewBag.Kaynaklar">
-            <option value="">Tüm Kaynaklar</option>
+        <label class="form-label">Demirbaş</label>
+        <select name="demirbasId" class="form-select" asp-items="ViewBag.Demirbaslar">
+            <option value="">Tüm Demirbaşlar</option>
         </select>
     </div>
     <div class="col-md-2">
@@ -41,14 +41,14 @@
     </div>
     <div class="col-md-4">
         <div class="dashboard-card" style="background-color:#198754;">
-            <div class="small">Aktif</div>
+            <div class="small">Zimmetli</div>
             <h3>@ViewBag.AktifSayisi</h3>
         </div>
     </div>
     <div class="col-md-4">
         <div class="dashboard-card" style="background-color:#dc3545;">
-            <div class="small">İptal Edildi</div>
-            <h3>@ViewBag.IptalSayisi</h3>
+            <div class="small">İade Edildi</div>
+            <h3>@ViewBag.IadeSayisi</h3>
         </div>
     </div>
 </div>
@@ -59,28 +59,28 @@
             <thead>
                 <tr>
                     <th>Personel</th>
-                    <th>Kaynak</th>
-                    <th>Başlangıç</th>
-                    <th>Bitiş</th>
+                    <th>Demirbaş</th>
+                    <th>Zimmet Tarihi</th>
+                    <th>İade Tarihi</th>
                     <th>Durum</th>
                 </tr>
             </thead>
             <tbody>
-                @foreach (var r in Model)
+                @foreach (var z in Model)
                 {
                     <tr>
-                        <td>@r.Personel?.AdSoyad</td>
-                        <td>@r.Kaynak?.Ad</td>
-                        <td>@r.BaslangicZamani.ToString("dd.MM.yyyy HH:mm")</td>
-                        <td>@r.BitisZamani.ToString("dd.MM.yyyy HH:mm")</td>
+                        <td>@z.Personel?.AdSoyad</td>
+                        <td>@z.Demirbas?.Ad</td>
+                        <td>@z.ZimmetTarihi.ToString("dd.MM.yyyy HH:mm")</td>
+                        <td>@(z.IadeTarihi?.ToString("dd.MM.yyyy HH:mm") ?? "-")</td>
                         <td>
-                            @if (r.Durum == DemirbasTakip.Models.RezervasyonDurumu.Aktif)
+                            @if (z.Durum == DemirbasTakip.Models.ZimmetDurumu.Aktif)
                             {
-                                <span class="badge bg-success">Aktif</span>
+                                <span class="badge bg-success">Zimmetli</span>
                             }
                             else
                             {
-                                <span class="badge bg-danger">İptal Edildi</span>
+                                <span class="badge bg-secondary">İade Edildi</span>
                             }
                         </td>
                     </tr>

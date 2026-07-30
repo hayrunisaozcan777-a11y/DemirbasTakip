@@ -14,7 +14,6 @@ namespace DemirbasTakip.Controllers
             _context = context;
         }
 
-        // GET: Personel
         public async Task<IActionResult> Index(string? arama)
         {
             var query = _context.Personeller.AsQueryable();
@@ -29,13 +28,11 @@ namespace DemirbasTakip.Controllers
             return View(liste);
         }
 
-        // GET: Personel/Create
         public IActionResult Create()
         {
             return View(new Personel());
         }
 
-        // POST: Personel/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(Personel personel)
@@ -59,7 +56,6 @@ namespace DemirbasTakip.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        // GET: Personel/Edit/5
         public async Task<IActionResult> Edit(int id)
         {
             var personel = await _context.Personeller.FindAsync(id);
@@ -67,7 +63,6 @@ namespace DemirbasTakip.Controllers
             return View(personel);
         }
 
-        // POST: Personel/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, Personel personel)
@@ -102,21 +97,19 @@ namespace DemirbasTakip.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        // GET: Personel/Delete/5
         public async Task<IActionResult> Delete(int id)
         {
             var personel = await _context.Personeller.FirstOrDefaultAsync(p => p.Id == id);
             if (personel == null) return NotFound();
 
-            bool aktifRezervasyonVarMi = await _context.Rezervasyonlar
-                .AnyAsync(r => r.PersonelId == id && r.Durum == RezervasyonDurumu.Aktif);
+            bool aktifZimmetVarMi = await _context.Zimmetler
+                .AnyAsync(z => z.PersonelId == id && z.Durum == ZimmetDurumu.Aktif);
 
-            ViewBag.SilinebilirMi = !aktifRezervasyonVarMi;
+            ViewBag.SilinebilirMi = !aktifZimmetVarMi;
 
             return View(personel);
         }
 
-        // POST: Personel/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
@@ -124,12 +117,12 @@ namespace DemirbasTakip.Controllers
             var personel = await _context.Personeller.FindAsync(id);
             if (personel == null) return NotFound();
 
-            bool aktifRezervasyonVarMi = await _context.Rezervasyonlar
-                .AnyAsync(r => r.PersonelId == id && r.Durum == RezervasyonDurumu.Aktif);
+            bool aktifZimmetVarMi = await _context.Zimmetler
+                .AnyAsync(z => z.PersonelId == id && z.Durum == ZimmetDurumu.Aktif);
 
-            if (aktifRezervasyonVarMi)
+            if (aktifZimmetVarMi)
             {
-                TempData["Hata"] = "Bu personelin aktif rezervasyonu bulunduğu için silinemez.";
+                TempData["Hata"] = "Bu personelin aktif zimmeti bulunduğu için silinemez.";
                 return RedirectToAction(nameof(Index));
             }
 
