@@ -1,0 +1,33 @@
+﻿@{
+    ViewData["Title"] = "Şifre Değiştir";
+}
+
+<div class="row justify-content-center mt-4">
+    <div class="col-md-5">
+        <div class="card shadow-sm">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0">🔑 Şifre Değiştir</h5>
+            </div>
+            <div class="card-body">
+                <form asp-action="SifreDegistir" method="post">
+                    <div class="mb-3">
+                        <label class="form-label font-weight-bold">Mevcut Şifre</label>
+                        <input type="password" name="MevcutSifre" class="form-control" required />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label font-weight-bold">Yeni Şifre</label>
+                        <input type="password" name="YeniSifre" class="form-control" required />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label font-weight-bold">Yeni Şifre (Tekrar)</label>
+                        <input type="password" name="YeniSifreTekrar" class="form-control" required />
+                    </div>
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary">Şifreyi Güncelle</button>
+                        <a asp-controller="Home" asp-action="Index" class="btn btn-outline-secondary">İptal</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

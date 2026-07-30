@@ -48,6 +48,57 @@ namespace DemirbasTakip.Controllers
             return RedirectToAction("Index", "Home");
         }
 
+        [HttpGet]
+        public IActionResult SifreDegistir()
+        {
+            if (HttpContext.Session.GetInt32("KullaniciId") == null)
+                return RedirectToAction("Index");
+
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> SifreDegistir(string MevcutSifre, string YeniSifre, string YeniSifreTekrar)
+        {
+            var kullaniciId = HttpContext.Session.GetInt32("KullaniciId");
+            if (kullaniciId == null)
+                return RedirectToAction("Index");
+
+            if (string.IsNullOrEmpty(MevcutSifre) || string.IsNullOrEmpty(YeniSifre) || string.IsNullOrEmpty(YeniSifreTekrar))
+            {
+                TempData["Hata"] = "Lütfen tüm alanları doldurun.";
+                return View();
+            }
+
+            if (YeniSifre != YeniSifreTekrar)
+            {
+                TempData["Hata"] = "Yeni şifreler birbiriyle eşleşmiyor!";
+                return View();
+            }
+
+            var kullanici = await _context.Kullanicilar.FindAsync(kullaniciId);
+
+            if (kullanici == null)
+            {
+                TempData["Hata"] = "Kullanıcı bulunamadı!";
+                return View();
+            }
+
+            var mevcutHash = PasswordHasher.Hash(MevcutSifre);
+            if (kullanici.SifreHash != mevcutHash)
+            {
+                TempData["Hata"] = "Mevcut şifreniz hatalı!";
+                return View();
+            }
+
+            kullanici.SifreHash = PasswordHasher.Hash(YeniSifre);
+            await _context.SaveChangesAsync();
+
+            TempData["Basarili"] = "Şifreniz başarıyla değiştirildi.";
+            return RedirectToAction("Index", "Home");
+        }
+
         public IActionResult Cikis()
         {
             HttpContext.Session.Clear();
