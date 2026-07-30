@@ -36,9 +36,12 @@
 							<li class="nav-item">
 								<a class="nav-link text-dark" asp-area="" asp-controller="Rapor" asp-action="Index">Raporlar</a>
 							</li>
+							@if (Context.Session.GetString("KullaniciRol") == "Admin")
+							{
 							<li class="nav-item">
 								<a class="nav-link text-dark" asp-area="" asp-controller="Kullanici" asp-action="Index">Kullanıcılar</a>
 							</li>
+							}
 							}
 						</ul>
 						<ul class="navbar-nav">

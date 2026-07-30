@@ -1,12 +1,14 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using DemirbasTakip.Data;
+using DemirbasTakip.Filters;
 using DemirbasTakip.Helpers;
 using DemirbasTakip.Models;
 using DemirbasTakip.ViewModels;
 
 namespace DemirbasTakip.Controllers
 {
+    [AdminOnlyFilter]
     public class KullaniciController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -16,7 +18,6 @@ namespace DemirbasTakip.Controllers
             _context = context;
         }
 
-        // GET: Kullanici
         public async Task<IActionResult> Index()
         {
             var liste = await _context.Kullanicilar
@@ -26,13 +27,11 @@ namespace DemirbasTakip.Controllers
             return View(liste);
         }
 
-        // GET: Kullanici/Create
         public IActionResult Create()
         {
             return View(new KullaniciFormViewModel());
         }
 
-        // POST: Kullanici/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(KullaniciFormViewModel vm)
@@ -66,7 +65,6 @@ namespace DemirbasTakip.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        // POST: Kullanici/PasifYap/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> PasifYap(int id)

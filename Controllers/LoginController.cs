@@ -53,5 +53,10 @@ namespace DemirbasTakip.Controllers
             HttpContext.Session.Clear();
             return RedirectToAction("Index");
         }
+
+        public IActionResult ErisimEngellendi()
+        {
+            return View();
+        }
     }
 }

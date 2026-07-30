@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using DemirbasTakip.Data;
+using DemirbasTakip.Filters;
 using DemirbasTakip.Models;
 using DemirbasTakip.ViewModels;
 
@@ -29,6 +30,7 @@ namespace DemirbasTakip.Controllers
             return View(liste);
         }
 
+        [AdminOnlyFilter]
         public async Task<IActionResult> Create()
         {
             var vm = new ZimmetFormViewModel();
@@ -36,11 +38,11 @@ namespace DemirbasTakip.Controllers
             return View(vm);
         }
 
+        [AdminOnlyFilter]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(ZimmetFormViewModel vm)
         {
-            // İş kuralı: Aktif zimmetli demirbaş tekrar zimmetlenemez
             bool aktifZimmetVarMi = await _context.Zimmetler
                 .AnyAsync(z => z.DemirbasId == vm.DemirbasId && z.Durum == ZimmetDurumu.Aktif);
 
@@ -70,6 +72,7 @@ namespace DemirbasTakip.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        [AdminOnlyFilter]
         public async Task<IActionResult> Iade(int id)
         {
             var zimmet = await _context.Zimmetler
@@ -80,6 +83,7 @@ namespace DemirbasTakip.Controllers
             return View(zimmet);
         }
 
+        [AdminOnlyFilter]
         [HttpPost, ActionName("Iade")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> IadeOnay(int id)
@@ -107,7 +111,6 @@ namespace DemirbasTakip.Controllers
                 .Select(p => new SelectListItem { Value = p.Id.ToString(), Text = p.AdSoyad })
                 .ToListAsync();
 
-            // Sadece aktif zimmeti olmayan demirbaşlar listelensin
             var zimmetliIdler = await _context.Zimmetler
                 .Where(z => z.Durum == ZimmetDurumu.Aktif)
                 .Select(z => z.DemirbasId)

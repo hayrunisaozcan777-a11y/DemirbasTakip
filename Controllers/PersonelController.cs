@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using DemirbasTakip.Data;
+using DemirbasTakip.Filters;
 using DemirbasTakip.Models;
 
 namespace DemirbasTakip.Controllers
@@ -28,11 +29,13 @@ namespace DemirbasTakip.Controllers
             return View(liste);
         }
 
+        [AdminOnlyFilter]
         public IActionResult Create()
         {
             return View(new Personel());
         }
 
+        [AdminOnlyFilter]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(Personel personel)
@@ -56,6 +59,7 @@ namespace DemirbasTakip.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        [AdminOnlyFilter]
         public async Task<IActionResult> Edit(int id)
         {
             var personel = await _context.Personeller.FindAsync(id);
@@ -63,6 +67,7 @@ namespace DemirbasTakip.Controllers
             return View(personel);
         }
 
+        [AdminOnlyFilter]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, Personel personel)
@@ -97,6 +102,7 @@ namespace DemirbasTakip.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        [AdminOnlyFilter]
         public async Task<IActionResult> Delete(int id)
         {
             var personel = await _context.Personeller.FirstOrDefaultAsync(p => p.Id == id);
@@ -110,6 +116,7 @@ namespace DemirbasTakip.Controllers
             return View(personel);
         }
 
+        [AdminOnlyFilter]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
