@@ -7,6 +7,19 @@
 		<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
 		<link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
 		<link rel="stylesheet" href="~/DemirbasTakip.styles.css" asp-append-version="true" />
+
+		<!-- EKLENEN KISIM 1: Menü arasına dikey çizgi (Sadece masaüstü görünümde çalışır, mobilde bozmaz) -->
+		<style>
+			@media (min-width: 576px) {
+			.navbar-nav.flex-grow-1 .nav-item:not(:last-child) {
+			border-right: 1px solid #dee2e6;
+			}
+			.navbar-nav.flex-grow-1 .nav-item {
+			padding-right: 10px;
+			margin-right: 10px;
+			}
+			}
+		</style>
 	</head>
 	<body>
 		<header>
@@ -50,6 +63,12 @@
 							<li class="nav-item">
 								<span class="nav-link text-dark">👤 @Context.Session.GetString("KullaniciAdi")</span>
 							</li>
+
+							<!-- EKLENEN KISIM 2: Şifre Değiştir Butonu -->
+							<li class="nav-item">
+								<a class="nav-link text-dark" asp-controller="Login" asp-action="SifreDegistir">Şifre Değiştir</a>
+							</li>
+
 							<li class="nav-item">
 								<a class="nav-link text-dark" asp-controller="Login" asp-action="Cikis">Çıkış Yap</a>
 							</li>
@@ -79,7 +98,6 @@
 				@RenderBody()
 			</main>
 		</div>
-
 		<footer class="footer text-muted">
 			<div class="container">
 				&copy; 2026 - DemirbasTakip - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
