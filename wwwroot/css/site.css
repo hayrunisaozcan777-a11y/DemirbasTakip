@@ -33,3 +33,10 @@ body {
   background-color: #f5f5f5;
   margin-top: 40px;
 }
+.navbar-nav .nav-item {
+  padding: 0 14px;
+}
+
+.navbar-nav .nav-item:not(:last-child) {
+  border-right: 1px solid #dee2e6;
+}
