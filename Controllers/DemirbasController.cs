@@ -11,19 +11,43 @@ namespace DemirbasTakip.Controllers
         private readonly ApplicationDbContext _context;
         public DemirbasController(ApplicationDbContext context) { _context = context; }
 
-        public async Task<IActionResult> Index(string? arama, DemirbasTuru? kategori)
+        public async Task<IActionResult> Index(string? arama, DemirbasTuru? kategori, DemirbasDurum? durum)
         {
             var query = _context.Demirbaslar.AsQueryable();
+
             if (!string.IsNullOrWhiteSpace(arama))
                 query = query.Where(d => d.Ad.Contains(arama) || d.DemirbasKodu.Contains(arama));
+
             if (kategori.HasValue)
                 query = query.Where(d => d.Kategori == kategori.Value);
 
+            if (durum.HasValue)
+                query = query.Where(d => d.Durum == durum.Value);
+
             ViewBag.Arama = arama;
             ViewBag.Kategori = kategori;
+            ViewBag.Durum = durum;
 
             var liste = await query.OrderBy(d => d.Ad).ToListAsync();
             return View(liste);
+        }
+
+        // YENİ METOT: Demirbaş Detay ve Zimmet Geçmişi (Audit Trail)
+        public async Task<IActionResult> Details(int id)
+        {
+            var demirbas = await _context.Demirbaslar
+                .Include(d => d.Zimmetler)
+                    .ThenInclude(z => z.Personel)
+                .FirstOrDefaultAsync(d => d.Id == id);
+
+            if (demirbas == null) return NotFound();
+
+            // Geçmiş zimmetleri yeniden eskiye doğru sıralıyoruz
+            demirbas.Zimmetler = demirbas.Zimmetler
+                .OrderByDescending(z => z.ZimmetTarihi)
+                .ToList();
+
+            return View(demirbas);
         }
 
         [AdminOnlyFilter]
