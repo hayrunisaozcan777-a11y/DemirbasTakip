@@ -17,6 +17,22 @@ namespace DemirbasTakip.Models
         Diger = 4
     }
 
+    // YENİ EKLENEN ENUM: Demirbaş Durumu
+    public enum DemirbasDurum
+    {
+        [Display(Name = "Boşta")]
+        Bosta = 1,
+
+        [Display(Name = "Zimmette")]
+        Zimmette = 2,
+
+        [Display(Name = "Tamirde / Arızalı")]
+        Tamirde = 3,
+
+        [Display(Name = "Hurda / Kullanım Dışı")]
+        Hurda = 4
+    }
+
     public class Demirbas
     {
         public int Id { get; set; }
@@ -38,6 +54,10 @@ namespace DemirbasTakip.Models
         [StringLength(50)]
         [Display(Name = "Seri No")]
         public string? SeriNo { get; set; }
+
+        // YENİ EKLENEN ALAN: Varsayılan olarak "Boşta" başlayacak
+        [Display(Name = "Durum")]
+        public DemirbasDurum Durum { get; set; } = DemirbasDurum.Bosta;
 
         [Display(Name = "Aktif mi?")]
         public bool AktifMi { get; set; } = true;
