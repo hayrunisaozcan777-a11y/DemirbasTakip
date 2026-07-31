@@ -78,5 +78,20 @@ namespace DemirbasTakip.Controllers
             TempData["Basarili"] = kullanici.AktifMi ? "Kullanıcı aktifleştirildi." : "Kullanıcı pasifleştirildi.";
             return RedirectToAction(nameof(Index));
         }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> SifreSifirla(int id)
+        {
+            var kullanici = await _context.Kullanicilar.FindAsync(id);
+            if (kullanici == null) return NotFound();
+
+            // Varsayılan geçici şifre: 123456
+            kullanici.SifreHash = PasswordHasher.Hash("123456");
+            await _context.SaveChangesAsync();
+
+            TempData["Basarili"] = $"{kullanici.KullaniciAdi} kullanıcısının şifresi '123456' olarak sıfırlandı.";
+            return RedirectToAction(nameof(Index));
+        }
     }
 }

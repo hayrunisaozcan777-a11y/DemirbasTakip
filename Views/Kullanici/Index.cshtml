@@ -1,97 +1,59 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using DemirbasTakip.Data;
-using DemirbasTakip.Filters;
-using DemirbasTakip.Helpers;
-using DemirbasTakip.Models;
-using DemirbasTakip.ViewModels;
-
-namespace DemirbasTakip.Controllers
-{
-    [AdminOnlyFilter]
-    public class KullaniciController : Controller
-    {
-        private readonly ApplicationDbContext _context;
-
-        public KullaniciController(ApplicationDbContext context)
-        {
-            _context = context;
-        }
-
-        public async Task<IActionResult> Index()
-        {
-            var liste = await _context.Kullanicilar
-                .OrderBy(k => k.KullaniciAdi)
-                .ToListAsync();
-
-            return View(liste);
-        }
-
-        public IActionResult Create()
-        {
-            return View(new KullaniciFormViewModel());
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(KullaniciFormViewModel vm)
-        {
-            if (!ModelState.IsValid)
-            {
-                return View(vm);
-            }
-
-            bool kullaniciAdiVarMi = await _context.Kullanicilar
-                .AnyAsync(k => k.KullaniciAdi == vm.KullaniciAdi);
-
-            if (kullaniciAdiVarMi)
-            {
-                ModelState.AddModelError(nameof(vm.KullaniciAdi), "Bu kullanıcı adı zaten kayıtlı.");
-                return View(vm);
-            }
-
-            var kullanici = new Kullanici
-            {
-                KullaniciAdi = vm.KullaniciAdi,
-                SifreHash = PasswordHasher.Hash(vm.Sifre),
-                Rol = vm.Rol,
-                AktifMi = true
-            };
-
-            _context.Kullanicilar.Add(kullanici);
-            await _context.SaveChangesAsync();
-
-            TempData["Basarili"] = "Kullanıcı başarıyla oluşturuldu.";
-            return RedirectToAction(nameof(Index));
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> PasifYap(int id)
-        {
-            var kullanici = await _context.Kullanicilar.FindAsync(id);
-            if (kullanici == null) return NotFound();
-
-            kullanici.AktifMi = !kullanici.AktifMi;
-            await _context.SaveChangesAsync();
-
-            TempData["Basarili"] = kullanici.AktifMi ? "Kullanıcı aktifleştirildi." : "Kullanıcı pasifleştirildi.";
-            return RedirectToAction(nameof(Index));
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> SifreSifirla(int id)
-        {
-            var kullanici = await _context.Kullanicilar.FindAsync(id);
-            if (kullanici == null) return NotFound();
-
-            // Varsayılan geçici şifre: 123456
-            kullanici.SifreHash = PasswordHasher.Hash("123456");
-            await _context.SaveChangesAsync();
-
-            TempData["Basarili"] = $"{kullanici.KullaniciAdi} kullanıcısının şifresi '123456' olarak sıfırlandı.";
-            return RedirectToAction(nameof(Index));
-        }
-    }
+﻿@model IEnumerable<DemirbasTakip.Models.Kullanici>
+@{
+    ViewData["Title"] = "Kullanıcılar";
 }
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h3>Kullanıcılar</h3>
+    <a asp-action="Create" class="btn btn-primary">+ Yeni Kullanıcı</a>
+</div>
+
+<div class="card">
+    <div class="card-body p-0">
+        <table class="table table-hover mb-0">
+            <thead>
+                <tr>
+                    <th>Kullanıcı Adı</th>
+                    <th>Rol</th>
+                    <th>Durum</th>
+                    <th class="text-end">İşlemler</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var k in Model)
+                {
+                    <tr>
+                        <td>@k.KullaniciAdi</td>
+                        <td>@k.Rol</td>
+                        <td>
+                            @if (k.AktifMi)
+                            {
+                                <span class="badge bg-success">Aktif</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-secondary">Pasif</span>
+                            }
+                        </td>
+                        <td class="text-end">
+                            <form asp-action="PasifYap" asp-route-id="@k.Id" method="post" class="d-inline">
+                                @if (k.AktifMi)
+                                {
+                                    <button type="submit" class="btn btn-sm btn-outline-warning">Pasifleştir</button>
+                                }
+                                else
+                                {
+                                    <button type="submit" class="btn btn-sm btn-outline-success">Aktifleştir</button>
+                                }
+                            </form>
+                        </td>
+                    </tr>
+                }
+                @if (!Model.Any())
+                {
+                    <tr><td colspan="4" class="text-center text-muted py-4">Kayıt bulunamadı.</td></tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
