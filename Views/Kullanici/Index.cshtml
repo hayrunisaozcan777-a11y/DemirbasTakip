@@ -36,6 +36,12 @@
                             }
                         </td>
                         <td class="text-end">
+                            <!-- Şifre Sıfırla Formu ve Butonu -->
+                            <form asp-action="SifreSifirla" asp-route-id="@k.Id" method="post" class="d-inline" onsubmit="return confirm('@k.KullaniciAdi kullanıcısının şifresi \'123456\' olarak sıfırlanacak. Onaylıyor musunuz?');">
+                                <button type="submit" class="btn btn-sm btn-outline-secondary me-1">🔑 Şifre Sıfırla</button>
+                            </form>
+
+                            <!-- PasifYap / AktifYap Formu -->
                             <form asp-action="PasifYap" asp-route-id="@k.Id" method="post" class="d-inline">
                                 @if (k.AktifMi)
                                 {
