@@ -55,7 +55,8 @@ namespace DemirbasTakip.Controllers
                 KullaniciAdi = vm.KullaniciAdi,
                 SifreHash = PasswordHasher.Hash(vm.Sifre),
                 Rol = vm.Rol,
-                AktifMi = true
+                AktifMi = true,
+                SifreDegistirilsinMi = false
             };
 
             _context.Kullanicilar.Add(kullanici);
@@ -88,9 +89,13 @@ namespace DemirbasTakip.Controllers
 
             // Varsayılan geçici şifre: 123456
             kullanici.SifreHash = PasswordHasher.Hash("123456");
+
+            // Şifre değiştirme zorunluluğunu aktif et
+            kullanici.SifreDegistirilsinMi = true;
+
             await _context.SaveChangesAsync();
 
-            TempData["Basarili"] = $"{kullanici.KullaniciAdi} kullanıcısının şifresi '123456' olarak sıfırlandı.";
+            TempData["Basarili"] = $"{kullanici.KullaniciAdi} kullanıcısının şifresi '123456' olarak sıfırlandı. İlk girişte şifre değiştirmesi istenecek.";
             return RedirectToAction(nameof(Index));
         }
     }
