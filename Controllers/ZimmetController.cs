@@ -66,6 +66,13 @@ namespace DemirbasTakip.Controllers
                 Durum = ZimmetDurumu.Aktif
             };
 
+            // DEMİRBAŞ DURUMUNU "ZİMMETTE" OLARAK GÜNCELLE
+            var demirbas = await _context.Demirbaslar.FindAsync(vm.DemirbasId);
+            if (demirbas != null)
+            {
+                demirbas.Durum = DemirbasDurum.Zimmette;
+            }
+
             _context.Zimmetler.Add(zimmet);
             await _context.SaveChangesAsync();
             TempData["Basarili"] = "Zimmet işlemi başarıyla oluşturuldu.";
@@ -99,6 +106,14 @@ namespace DemirbasTakip.Controllers
 
             zimmet.Durum = ZimmetDurumu.IadeEdildi;
             zimmet.IadeTarihi = DateTime.Now;
+
+            // DEMİRBAŞ DURUMUNU TEKRAR "BOŞTA" OLARAK GÜNCELLE
+            var demirbas = await _context.Demirbaslar.FindAsync(zimmet.DemirbasId);
+            if (demirbas != null)
+            {
+                demirbas.Durum = DemirbasDurum.Bosta;
+            }
+
             await _context.SaveChangesAsync();
             TempData["Basarili"] = "İade işlemi tamamlandı.";
             return RedirectToAction(nameof(Index));
@@ -111,13 +126,9 @@ namespace DemirbasTakip.Controllers
                 .Select(p => new SelectListItem { Value = p.Id.ToString(), Text = p.AdSoyad })
                 .ToListAsync();
 
-            var zimmetliIdler = await _context.Zimmetler
-                .Where(z => z.Durum == ZimmetDurumu.Aktif)
-                .Select(z => z.DemirbasId)
-                .ToListAsync();
-
+            // Sadece Aktif ve Durumu BOŞTA olan demirbaşlar listelenir
             vm.DemirbasListesi = await _context.Demirbaslar
-                .Where(d => d.AktifMi && !zimmetliIdler.Contains(d.Id))
+                .Where(d => d.AktifMi && d.Durum == DemirbasDurum.Bosta)
                 .OrderBy(d => d.Ad)
                 .Select(d => new SelectListItem { Value = d.Id.ToString(), Text = d.Ad + " (" + d.DemirbasKodu + ")" })
                 .ToListAsync();
