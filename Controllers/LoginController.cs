@@ -41,9 +41,17 @@ namespace DemirbasTakip.Controllers
                 return View(model);
             }
 
+            // Session bilgilerini kaydet
             HttpContext.Session.SetInt32("KullaniciId", kullanici.Id);
             HttpContext.Session.SetString("KullaniciAdi", kullanici.KullaniciAdi);
             HttpContext.Session.SetString("KullaniciRol", kullanici.Rol.ToString());
+
+            // ZORUNLU ŞİFRE DEĞİŞTİRME KONTROLÜ
+            if (kullanici.SifreDegistirilsinMi)
+            {
+                TempData["Hata"] = "Geçici şifrenizle giriş yaptınız. Lütfen devam etmek için yeni şifrenizi belirleyin.";
+                return RedirectToAction("SifreDegistir");
+            }
 
             return RedirectToAction("Index", "Home");
         }
@@ -92,7 +100,10 @@ namespace DemirbasTakip.Controllers
                 return View();
             }
 
+            // Şifreyi güncelle ve zorunluluk bayrağını kaldır
             kullanici.SifreHash = PasswordHasher.Hash(YeniSifre);
+            kullanici.SifreDegistirilsinMi = false;
+
             await _context.SaveChangesAsync();
 
             TempData["Basarili"] = "Şifreniz başarıyla değiştirildi.";
