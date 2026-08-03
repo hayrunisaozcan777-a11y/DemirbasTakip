@@ -17,7 +17,7 @@ namespace DemirbasTakip.Models
         [Display(Name = "Kullanıcı Adı")]
         public string KullaniciAdi { get; set; } = string.Empty;
 
-        [Required(ErrorMessage = "Şifre zorunludur.")]
+        // [Required(ErrorMessage = "Şifre zorunludur.")] --> BU SATIRI SİL VEYA YORUMA AL
         public string SifreHash { get; set; } = string.Empty;
 
         [Required]
