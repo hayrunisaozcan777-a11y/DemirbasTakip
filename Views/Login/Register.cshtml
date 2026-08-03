@@ -1,0 +1,52 @@
+﻿@model DemirbasTakip.Models.Kullanici
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Yeni Kullanıcı";
+}
+
+<div class="d-flex justify-content-center align-items-center" style="min-height:75vh;">
+    <div class="card shadow-sm" style="width:400px;">
+        <div class="card-body p-4">
+            <h4 class="mb-3 text-center">Yeni Kullanıcı Kaydı</h4>
+            
+            <form asp-action="Register" method="post">
+                <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                <div class="mb-3">
+                    <label asp-for="AdSoyad" class="form-label">Ad Soyad</label>
+                    <input asp-for="AdSoyad" class="form-control" autofocus />
+                    <span asp-validation-for="AdSoyad" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="KullaniciAdi" class="form-label">Kullanıcı Adı</label>
+                    <input asp-for="KullaniciAdi" class="form-control" />
+                    <span asp-validation-for="KullaniciAdi" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Sifre" class="form-label">Şifre</label>
+                    <input asp-for="Sifre" type="password" class="form-control" />
+                    <span asp-validation-for="Sifre" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Şifre (Tekrar)</label>
+                    <input name="sifreTekrar" type="password" class="form-control" />
+                </div>
+
+                <button type="submit" class="btn btn-primary w-100 mb-3">Kayıt Ol</button>
+
+                <div class="text-center">
+                    <a asp-action="Index" class="text-decoration-none small text-muted">Zaten hesabın var mı? Giriş Yap</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
