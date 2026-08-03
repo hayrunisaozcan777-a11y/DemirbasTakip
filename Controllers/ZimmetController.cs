@@ -119,6 +119,20 @@ namespace DemirbasTakip.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        // --- YENİ EKLENEN TUTANAK METODU ---
+        public async Task<IActionResult> Tutanak(int id)
+        {
+            var zimmet = await _context.Zimmetler
+                .Include(z => z.Personel)
+                .Include(z => z.Demirbas)
+                .FirstOrDefaultAsync(z => z.Id == id);
+
+            if (zimmet == null) return NotFound();
+
+            return View(zimmet);
+        }
+        // ------------------------------------
+
         private async Task DoldurListeler(ZimmetFormViewModel vm)
         {
             vm.PersonelListesi = await _context.Personeller
