@@ -1,0 +1,117 @@
+﻿@model DemirbasTakip.Models.Zimmet
+@{
+    Layout = null; // Menüleri ve ana düzeni kaldırıp temiz A4 kağıdı formatı veriyoruz
+}
+
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Zimmet Teslim Tutanağı - #@Model.Id</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
+        }
+        .tutanak-container {
+            max-width: 800px;
+            margin: 30px auto;
+            background: #fff;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        .imza-kutusu {
+            height: 100px;
+            border-bottom: 1px dashed #000;
+        }
+        @@media print {
+            .no-print {
+                display: none !important; /* Yazıcı çıktısında butonlar gizlenir */
+            }
+            body {
+                background-color: #fff;
+            }
+            .tutanak-container {
+                box-shadow: none;
+                padding: 0;
+                margin: 0;
+                max-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container text-center mt-3 no-print">
+        <button onclick="window.print()" class="btn btn-primary me-2">🖨️ Yazdır / PDF Olarak Kaydet</button>
+        <button onclick="window.close()" class="btn btn-secondary">Kapat</button>
+    </div>
+
+    <div class="tutanak-container">
+        <!-- Başlık -->
+        <div class="text-center border-bottom pb-3 mb-4">
+            <h2 class="fw-bold text-uppercase">Zimmet Teslim ve Tesellüm Tutanağı</h2>
+            <p class="text-muted mb-0">Belge No: ZMM-@Model.Id.ToString("D5") | Tarih: @Model.ZimmetTarihi.ToString("dd.MM.yyyy")</p>
+        </div>
+
+        <!-- Açıklama Metni -->
+        <p class="lh-lg mb-4">
+            Aşağıda detayları belirtilen demirbaş/cihaz, ilgili personele çalışır ve eksiksiz durumda teslim edilmiştir. 
+            Personel, cihazı şirket politikalarına uygun olarak kullanmayı ve görevi sona erdiğinde veya talep edildiğinde eksiksiz iade etmeyi kabul eder.
+        </p>
+
+        <!-- Personel & Demirbaş Bilgileri -->
+        <div class="row g-3 mb-4">
+            <div class="col-6">
+                <div class="card h-100">
+                    <div class="card-header bg-light fw-bold">TESLİM ALAN (PERSONEL)</div>
+                    <div class="card-body">
+                        <p class="mb-1"><strong>Ad Soyad:</strong> @Model.Personel?.AdSoyad</p>
+                        <p class="mb-1"><strong>E-Posta:</strong> @(Model.Personel?.Eposta ?? "-")</p>
+                        <p class="mb-0"><strong>Telefon:</strong> @(Model.Personel?.Telefon ?? "-")</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="card h-100">
+                    <div class="card-header bg-light fw-bold">TESLİM EDİLEN DEMİRBAŞ</div>
+                    <div class="card-body">
+                        <p class="mb-1"><strong>Demirbaş Adı:</strong> @Model.Demirbas?.Ad</p>
+                        <p class="mb-1"><strong>Demirbaş Kodu:</strong> @Model.Demirbas?.DemirbasKodu</p>
+                        <p class="mb-1"><strong>Kategori:</strong> @Model.Demirbas?.Kategori</p>
+                        <p class="mb-0"><strong>Seri No:</strong> @(string.IsNullOrEmpty(Model.Demirbas?.SeriNo) ? "-" : Model.Demirbas?.SeriNo)</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        @if (!string.IsNullOrEmpty(Model.Not))
+        {
+            <div class="alert alert-secondary mb-4">
+                <strong>Zimmet Notu / Açıklama:</strong> @Model.Not
+            </div>
+        }
+
+        <!-- İmza Alanı -->
+        <div class="row text-center mt-5 pt-4">
+            <div class="col-6">
+                <p class="fw-bold mb-1">TESLİM EDEN</p>
+                <p class="text-muted small mb-4">(Sistem Yöneticisi / Yetkili)</p>
+                <div class="imza-kutusu mb-2"></div>
+                <p class="small text-muted">İmza / Tarih</p>
+            </div>
+            <div class="col-6">
+                <p class="fw-bold mb-1">TESLİM ALAN</p>
+                <p class="text-muted small mb-4">@Model.Personel?.AdSoyad</p>
+                <div class="imza-kutusu mb-2"></div>
+                <p class="small text-muted">İmza / Tarih</p>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
