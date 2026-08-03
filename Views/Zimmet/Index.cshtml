@@ -19,9 +19,7 @@
         </select>
     </div>
     <div class="col-auto">
-        <select name="personelId" class="form-select" asp-items="ViewBag.Personeller">
-            <option value="">Tüm Personel</option>
-        </select>
+        <input type="text" name="personelAdi" value="@Context.Request.Query["personelAdi"]" class="form-control" placeholder="Personel ara..." />
     </div>
     <div class="col-auto">
         <button type="submit" class="btn btn-outline-secondary">Filtrele</button>
@@ -70,7 +68,6 @@
                         @if (isAdmin)
                         {
                             <td class="text-end">
-                                <!-- TUTANAK BUTONU EKLENDİ (Yeni sekmede açılır: target="_blank") -->
                                 <a asp-action="Tutanak" asp-route-id="@z.Id" target="_blank" class="btn btn-sm btn-outline-info">🖨️ Tutanak</a>
                                 
                                 @if (z.Durum == DemirbasTakip.Models.ZimmetDurumu.Aktif)
