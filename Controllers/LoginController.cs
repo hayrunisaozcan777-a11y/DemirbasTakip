@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using DemirbasTakip.Data;
 using DemirbasTakip.Helpers;
 using DemirbasTakip.ViewModels;
+using DemirbasTakip.Models;
 
 namespace DemirbasTakip.Controllers
 {
@@ -54,6 +55,49 @@ namespace DemirbasTakip.Controllers
             }
 
             return RedirectToAction("Index", "Home");
+        }
+
+        [HttpGet]
+        public IActionResult Register()
+        {
+            if (HttpContext.Session.GetInt32("KullaniciId") != null)
+                return RedirectToAction("Index", "Home");
+
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Register(Kullanici model, string sifre, string sifreTekrar)
+        {
+            if (string.IsNullOrEmpty(sifre) || sifre != sifreTekrar)
+            {
+                ModelState.AddModelError(string.Empty, "Şifreler boş olamaz ve birbiriyle uyuşmuyor.");
+                return View(model);
+            }
+
+            var varMi = await _context.Kullanicilar.AnyAsync(x => x.KullaniciAdi == model.KullaniciAdi);
+            if (varMi)
+            {
+                ModelState.AddModelError("KullaniciAdi", "Bu kullanıcı adı zaten kullanımda.");
+                return View(model);
+            }
+
+            if (ModelState.IsValid)
+            {
+                model.SifreHash = PasswordHasher.Hash(sifre);
+                model.AktifMi = true;
+                model.Rol = KullaniciRol.Personel;
+                model.SifreDegistirilsinMi = false;
+
+                _context.Kullanicilar.Add(model);
+                await _context.SaveChangesAsync();
+
+                TempData["Basarili"] = "Kayıt başarıyla oluşturuldu. Şimdi giriş yapabilirsiniz.";
+                return RedirectToAction("Index");
+            }
+
+            return View(model);
         }
 
         [HttpGet]
