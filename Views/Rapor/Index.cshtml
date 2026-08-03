@@ -1,76 +1,60 @@
 ﻿@model IEnumerable<DemirbasTakip.Models.Zimmet>
 @{
-    ViewData["Title"] = "Raporlar";
+    ViewData["Title"] = "Zimmet İşlemleri";
+    var isAdmin = Context.Session.GetString("KullaniciRol") == "Admin";
 }
 
-<h3 class="mb-4">Zimmet Raporu</h3>
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h3>Zimmet İşlemleri</h3>
+    @if (isAdmin)
+    {
+        <a asp-action="Create" class="btn btn-primary">+ Yeni Zimmet</a>
+    }
+</div>
 
-<form method="get" class="row g-2 mb-4">
-    <div class="col-md-3">
-        <label class="form-label">Personel Ara</label>
-        <input type="text" name="personelAdi" value="@Context.Request.Query["personelAdi"]" class="form-control" placeholder="Personel adı yazın..." />
-    </div>
-    <div class="col-md-3">
-        <label class="form-label">Demirbaş</label>
+<form method="get" class="row g-2 mb-3">
+    <div class="col-auto">
         <select name="demirbasId" class="form-select" asp-items="ViewBag.Demirbaslar">
             <option value="">Tüm Demirbaşlar</option>
         </select>
     </div>
-    <div class="col-md-2">
-        <label class="form-label">Başlangıç Tarihi</label>
-        <input type="date" name="baslangic" value="@ViewBag.Baslangic" class="form-control" />
+    <div class="col-auto">
+        <input type="text" name="personelAdi" value="@Context.Request.Query["personelAdi"]" class="form-control" placeholder="Personel ara..." />
     </div>
-    <div class="col-md-2">
-        <label class="form-label">Bitiş Tarihi</label>
-        <input type="date" name="bitis" value="@ViewBag.Bitis" class="form-control" />
+    <div class="col-auto">
+        <button type="submit" class="btn btn-outline-secondary">Filtrele</button>
     </div>
-    <div class="col-md-2 d-flex align-items-end">
-        <button type="submit" class="btn btn-outline-secondary me-2">Filtrele</button>
+    <div class="col-auto">
         <a asp-action="Index" class="btn btn-outline-dark">Temizle</a>
     </div>
 </form>
 
-<div class="row g-3 mb-4">
-    <div class="col-md-4">
-        <div class="dashboard-card text-white ps-4 py-3" style="background-color:#6c757d;">
-            <div class="small">Toplam Kayıt</div>
-            <h3>@ViewBag.ToplamKayit</h3>
-        </div>
-    </div>
-    <div class="col-md-4">
-        <div class="dashboard-card text-white ps-4 py-3" style="background-color:#198754;">
-            <div class="small">Zimmetli</div>
-            <h3>@ViewBag.AktifSayisi</h3>
-        </div>
-    </div>
-    <div class="col-md-4">
-        <div class="dashboard-card text-white ps-4 py-3" style="background-color:#dc3545;">
-            <div class="small">İade Edildi</div>
-            <h3>@ViewBag.IadeSayisi</h3>
-        </div>
-    </div>
-</div>
-
 <div class="card">
     <div class="card-body p-0">
-        <table class="table table-hover mb-0">
+        <table class="table table-hover mb-0 align-middle">
             <thead>
                 <tr>
                     <th>Personel</th>
                     <th>Demirbaş</th>
                     <th>Zimmet Tarihi</th>
                     <th>İade Tarihi</th>
+                    <th>Not</th>
                     <th>Durum</th>
+                    @if (isAdmin)
+                    {
+                        <th class="text-end">İşlemler</th>
+                    }
                 </tr>
             </thead>
             <tbody>
                 @foreach (var z in Model)
                 {
                     <tr>
-                        <td>@z.Personel?.AdSoyad</td>
+                        <td><strong>@z.Personel?.AdSoyad</strong></td>
                         <td>@z.Demirbas?.Ad</td>
                         <td>@z.ZimmetTarihi.ToString("dd.MM.yyyy HH:mm")</td>
                         <td>@(z.IadeTarihi?.ToString("dd.MM.yyyy HH:mm") ?? "-")</td>
+                        <td>@(string.IsNullOrEmpty(z.Not) ? "-" : z.Not)</td>
                         <td>
                             @if (z.Durum == DemirbasTakip.Models.ZimmetDurumu.Aktif)
                             {
@@ -81,11 +65,24 @@
                                 <span class="badge bg-secondary">İade Edildi</span>
                             }
                         </td>
+                        @if (isAdmin)
+                        {
+                            <td class="text-end">
+                                <a asp-action="Tutanak" asp-route-id="@z.Id" target="_blank" class="btn btn-sm btn-outline-info">🖨️ Tutanak</a>
+                                
+                                @if (z.Durum == DemirbasTakip.Models.ZimmetDurumu.Aktif)
+                                {
+                                    <a asp-action="Iade" asp-route-id="@z.Id" class="btn btn-sm btn-outline-warning">İade Al</a>
+                                }
+                            </td>
+                        }
                     </tr>
                 }
                 @if (!Model.Any())
                 {
-                    <tr><td colspan="5" class="text-center text-muted py-4">Kayıt bulunamadı.</td></tr>
+                    <tr>
+                        <td colspan="7" class="text-center text-muted py-4">Kayıt bulunamadı.</td>
+                    </tr>
                 }
             </tbody>
         </table>
