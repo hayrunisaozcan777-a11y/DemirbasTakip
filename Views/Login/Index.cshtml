@@ -29,7 +29,12 @@
                     <span asp-validation-for="Sifre" class="text-danger"></span>
                 </div>
 
-                <button type="submit" class="btn btn-primary w-100">Giriş Yap</button>
+                <button type="submit" class="btn btn-primary w-100 mb-3">Giriş Yap</button>
+
+                <!-- Yeni Kullanıcı Bağlantısı -->
+                <div class="text-center">
+                    <a asp-action="Register" class="text-decoration-none small text-muted">Yeni Kullanıcı</a>
+                </div>
             </form>
         </div>
     </div>
