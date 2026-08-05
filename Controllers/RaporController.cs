@@ -17,7 +17,7 @@ namespace DemirbasTakip.Controllers
 
             if (!string.IsNullOrEmpty(personelAdi))
             {
-                query = query.Where(z => z.Personel.AdSoyad.Contains(personelAdi));
+                query = query.Where(z => z.Personel != null && z.Personel.AdSoyad.Contains(personelAdi));
             }
 
             if (demirbasId.HasValue)
