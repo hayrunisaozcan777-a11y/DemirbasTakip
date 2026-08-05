@@ -1,4 +1,5 @@
-﻿@model IEnumerable<DemirbasTakip.Models.Demirbas>
+﻿@model DemirbasTakip.ViewModels.SayfalanmisListe<DemirbasTakip.Models.Demirbas>
+
 @{
     ViewData["Title"] = "Demirbaşlar";
     var isAdmin = Context.Session.GetString("KullaniciRol") == "Admin";
@@ -53,7 +54,7 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach (var d in Model)
+                @foreach (var d in Model.Items)
                 {
                     <tr>
                         <td><strong>@d.DemirbasKodu</strong></td>
@@ -90,7 +91,7 @@
                         </td>
                     </tr>
                 }
-                @if (!Model.Any())
+                @if (!Model.Items.Any())
                 {
                     <tr>
                         <td colspan="6" class="text-center text-muted py-4">Kayıt bulunamadı.</td>
