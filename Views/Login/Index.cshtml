@@ -4,34 +4,45 @@
     ViewData["Title"] = "Giriş Yap";
 }
 
+@section Styles {
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+}
+
 <div class="d-flex justify-content-center align-items-center" style="min-height:70vh;">
-    <div class="card shadow-sm" style="width:380px;">
+    <div class="card shadow-sm border-0 rounded-4" style="width:380px;">
         <div class="card-body p-4">
-            <h4 class="mb-3 text-center">Demirbaş Takip - Giriş</h4>
+            <h3 class="mb-2 text-center fw-bold text-primary">Demirbaş Takip</h3>
+            <p class="mb-4 text-center text-muted small">Lütfen hesabınıza giriş yapın</p>
+            
             <form asp-action="Index" method="post">
-                <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+                <div asp-validation-summary="ModelOnly" class="text-danger mb-3 small"></div>
 
                 <div class="mb-3">
-                    <label asp-for="KullaniciAdi" class="form-label"></label>
-                    <input asp-for="KullaniciAdi" class="form-control" autofocus />
-                    <span asp-validation-for="KullaniciAdi" class="text-danger"></span>
+                    <label asp-for="KullaniciAdi" class="form-label small text-secondary"></label>
+                    <input asp-for="KullaniciAdi" class="form-control rounded-pill bg-light" autofocus placeholder="Kullanıcı adınızı girin" />
+                    <span asp-validation-for="KullaniciAdi" class="text-danger small"></span>
                 </div>
 
                 <div class="mb-3">
-                    <!-- Şifre Etiketi ve Şifremi Unuttum Bağlantısı -->
                     <div class="d-flex justify-content-between align-items-center mb-1">
-                        <label asp-for="Sifre" class="form-label mb-0"></label>
+                        <label asp-for="Sifre" class="form-label mb-0 small text-secondary"></label>
                         <a href="#" class="text-decoration-none small text-primary" data-bs-toggle="modal" data-bs-target="#sifremiUnuttumModal">
                             Şifremi Unuttum?
                         </a>
                     </div>
-                    <input asp-for="Sifre" class="form-control" />
-                    <span asp-validation-for="Sifre" class="text-danger"></span>
+                    
+                    <!-- Şifre Alanı ve Minimalist Göz İkonu -->
+                    <div class="input-group">
+                        <input asp-for="Sifre" type="password" class="form-control rounded-start-pill bg-light" id="sifreInput" placeholder="Şifrenizi girin" />
+                        <button class="btn btn-outline-secondary rounded-end-pill px-3 border-start-0" type="button" id="sifreGosterBtn" onclick="sifreyiGosterGizle()" title="Şifreyi Göster/Gizle">
+                            <i class="bi bi-eye" id="gozIkon"></i>
+                        </button>
+                    </div>
+                    <span asp-validation-for="Sifre" class="text-danger small"></span>
                 </div>
 
-                <button type="submit" class="btn btn-primary w-100 mb-3">Giriş Yap</button>
+                <button type="submit" class="btn btn-primary rounded-pill w-100 mb-3 shadow-sm">Giriş Yap</button>
 
-                <!-- Yeni Kullanıcı Bağlantısı -->
                 <div class="text-center">
                     <a asp-action="Register" class="text-decoration-none small text-muted">Yeni Kullanıcı</a>
                 </div>
@@ -40,21 +51,21 @@
     </div>
 </div>
 
-<!-- Şifremi Unuttum Modal (Açılır Pencere) -->
+<!-- Şifremi Unuttum Modal -->
 <div class="modal fade" id="sifremiUnuttumModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header bg-light">
-                <h5 class="modal-title">🔑 Şifremi Unuttum</h5>
+        <div class="modal-content rounded-4 border-0 shadow">
+            <div class="modal-header bg-light border-0 rounded-top-4">
+                <h5 class="modal-title fw-bold text-dark">🔑 Şifremi Unuttum</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body text-center p-4">
-                <p class="mb-0">
+                <p class="mb-0 text-muted">
                     Şifrenizi unuttuysanız lütfen sistem yöneticiniz (<strong>Admin</strong>) ile iletişime geçerek şifrenizi sıfırlatın.
                 </p>
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Anladım</button>
+            <div class="modal-footer border-0 justify-content-center pb-4">
+                <button type="button" class="btn btn-secondary rounded-pill px-4 btn-sm" data-bs-dismiss="modal">Anladım</button>
             </div>
         </div>
     </div>
@@ -66,14 +77,27 @@
     }
     <script>
         document.addEventListener("DOMContentLoaded", function () {
-            // Kullanıcı adı ve Şifre input'larını yakala
             var kullaniciInput = document.querySelector('input[name="KullaniciAdi"]');
-            var sifreInput = document.querySelector('input[name="Sifre"]');
+            var sifreInput = document.getElementById('sifreInput');
 
-            // Eğer kullanıcı adı doluysa imleci şifre alanına odakla
             if (kullaniciInput && kullaniciInput.value.trim() !== "") {
                 sifreInput.focus();
             }
         });
+
+        function sifreyiGosterGizle() {
+            const input = document.getElementById('sifreInput');
+            const ikon = document.getElementById('gozIkon');
+            
+            if (input.type === 'password') {
+                input.type = 'text';
+                ikon.classList.remove('bi-eye');
+                ikon.classList.add('bi-eye-slash');
+            } else {
+                input.type = 'password';
+                ikon.classList.remove('bi-eye-slash');
+                ikon.classList.add('bi-eye');
+            }
+        }
     </script>
 }
