@@ -11,8 +11,10 @@ namespace DemirbasTakip.Controllers
         private readonly ApplicationDbContext _context;
         public DemirbasController(ApplicationDbContext context) { _context = context; }
 
-        public async Task<IActionResult> Index(string? arama, DemirbasTuru? kategori, DemirbasDurum? durum)
+        public async Task<IActionResult> Index(string? arama, DemirbasTuru? kategori, DemirbasDurum? durum, int sayfa = 1)
         {
+            const int sayfaBoyutu = 5;
+
             var query = _context.Demirbaslar.AsQueryable();
 
             if (!string.IsNullOrWhiteSpace(arama))
@@ -28,11 +30,27 @@ namespace DemirbasTakip.Controllers
             ViewBag.Kategori = kategori;
             ViewBag.Durum = durum;
 
-            var liste = await query.OrderBy(d => d.Ad).ToListAsync();
-            return View(liste);
+            int toplamKayit = await query.CountAsync();
+            int toplamSayfa = (int)Math.Ceiling(toplamKayit / (double)sayfaBoyutu);
+
+            var kayitlar = await query
+                .OrderBy(d => d.Ad)
+                .Skip((sayfa - 1) * sayfaBoyutu)
+                .Take(sayfaBoyutu)
+                .ToListAsync();
+
+            var vm = new DemirbasTakip.ViewModels.SayfalanmisListe<Demirbas>
+            {
+                Kayitlar = kayitlar,
+                MevcutSayfa = sayfa,
+                ToplamSayfa = Math.Max(toplamSayfa, 1),
+                ToplamKayit = toplamKayit
+            };
+
+            return View(vm);
         }
 
-        // YENİ METOT: Demirbaş Detay ve Zimmet Geçmişi (Audit Trail)
+        // Demirbaş Detay ve Zimmet Geçmişi (Audit Trail)
         public async Task<IActionResult> Details(int id)
         {
             var demirbas = await _context.Demirbaslar
@@ -42,7 +60,6 @@ namespace DemirbasTakip.Controllers
 
             if (demirbas == null) return NotFound();
 
-            // Geçmiş zimmetleri yeniden eskiye doğru sıralıyoruz
             demirbas.Zimmetler = demirbas.Zimmetler
                 .OrderByDescending(z => z.ZimmetTarihi)
                 .ToList();
