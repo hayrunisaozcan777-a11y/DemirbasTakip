@@ -5,15 +5,17 @@ namespace DemirbasTakip.Helpers
 {
     public static class LogHelper
     {
-        public static async Task KaydetAsync(ApplicationDbContext context, string kullaniciAdi, string islem, string? detay = null)
+        public static async Task KaydetAsync(ApplicationDbContext context, string kullanici, string islemTuru, string aciklama)
         {
-            context.IslemLoglari.Add(new IslemLog
+            var log = new IslemLog
             {
-                KullaniciAdi = kullaniciAdi,
-                Islem = islem,
-                Detay = detay,
+                Kullanici = kullanici,
+                IslemTuru = islemTuru,
+                Aciklama = aciklama,
                 Tarih = DateTime.Now
-            });
+            };
+
+            context.IslemLoglari.Add(log);
             await context.SaveChangesAsync();
         }
     }
