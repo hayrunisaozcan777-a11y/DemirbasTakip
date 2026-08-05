@@ -12,18 +12,15 @@
     }
 </div>
 
-<form method="get" class="row g-2 mb-3">
+<div class="row g-2 mb-3">
     <div class="col-auto">
-        <input type="text" name="arama" value="@ViewBag.Arama" class="form-control" placeholder="Ad soyad veya departman ara..." />
+        <input type="text" id="personelAramaInput" class="form-control" placeholder="Ad soyad veya departman ara..." />
     </div>
-    <div class="col-auto">
-        <button type="submit" class="btn btn-outline-secondary">Ara</button>
-    </div>
-</form>
+</div>
 
 <div class="card">
     <div class="card-body p-0">
-        <table class="table table-hover mb-0">
+        <table class="table table-hover mb-0" id="personelTablosu">
             <thead>
                 <tr>
                     <th>Ad Soyad</th>
@@ -70,3 +67,22 @@
         </table>
     </div>
 </div>
+
+@section Scripts {
+    <script>
+        document.getElementById('personelAramaInput').addEventListener('keyup', function () {
+            let arananDeger = this.value.toLowerCase().trim();
+            let satirlar = document.querySelectorAll('#personelTablosu tbody tr');
+
+            satirlar.forEach(satir => {
+                let satirMetni = satir.textContent.toLowerCase();
+                
+                if (satirMetni.includes(arananDeger)) {
+                    satir.style.display = '';
+                } else {
+                    satir.style.display = 'none';
+                }
+            });
+        });
+    </script>
+}
