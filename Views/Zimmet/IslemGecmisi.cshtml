@@ -1,0 +1,38 @@
+﻿@model IEnumerable<DemirbasTakip.Models.IslemLog>
+@{
+    ViewData["Title"] = "İşlem Geçmişi";
+}
+
+<h3 class="mb-4">İşlem Geçmişi (Audit Trail)</h3>
+
+<div class="card">
+    <div class="card-body p-0">
+        <table class="table table-hover mb-0 align-middle">
+            <thead>
+                <tr>
+                    <th>Tarih</th>
+                    <th>Kullanıcı</th>
+                    <th>İşlem Türü</th>
+                    <th>Açıklama</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var log in Model)
+                {
+                    <tr>
+                        <td>@log.Tarih.ToString("dd.MM.yyyy HH:mm:ss")</td>
+                        <td><span class="badge bg-secondary">@log.Kullanici</span></td>
+                        <td><strong>@log.IslemTuru</strong></td>
+                        <td>@log.Aciklama</td>
+                    </tr>
+                }
+                @if (!Model.Any())
+                {
+                    <tr>
+                        <td colspan="4" class="text-center text-muted py-4">Henüz kayıtlı bir işlem geçmişi bulunmuyor.</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

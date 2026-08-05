@@ -128,7 +128,6 @@ namespace DemirbasTakip.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        // --- YENİ EKLENEN TUTANAK METODU ---
         public async Task<IActionResult> Tutanak(int id)
         {
             var zimmet = await _context.Zimmetler
@@ -140,6 +139,16 @@ namespace DemirbasTakip.Controllers
 
             return View(zimmet);
         }
+
+        // --- İŞLEM GEÇMİŞİ METODU EKLENDİ ---
+        [AdminOnlyFilter]
+        public async Task<IActionResult> IslemGecmisi()
+        {
+            var loglar = await _context.IslemLoglari
+                .OrderByDescending(l => l.Tarih)
+                .ToListAsync();
+            return View(loglar);
+        }
         // ------------------------------------
 
         private async Task DoldurListeler(ZimmetFormViewModel vm)
@@ -149,7 +158,6 @@ namespace DemirbasTakip.Controllers
                 .Select(p => new SelectListItem { Value = p.Id.ToString(), Text = p.AdSoyad })
                 .ToListAsync();
 
-            // Sadece Aktif ve Durumu BOŞTA olan demirbaşlar listelenir
             vm.DemirbasListesi = await _context.Demirbaslar
                 .Where(d => d.AktifMi && d.Durum == DemirbasDurum.Bosta)
                 .OrderBy(d => d.Ad)

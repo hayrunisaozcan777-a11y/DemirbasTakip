@@ -7,7 +7,6 @@
 		<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
 		<link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
 		<link rel="stylesheet" href="~/DemirbasTakip.styles.css" asp-append-version="true" />
-
 		<!-- Menü arasına dikey çizgi (@@media yazarak Razor hatası çözüldü) -->
 		<style>
 			@@media (min-width: 576px) {
@@ -49,10 +48,14 @@
 							<li class="nav-item">
 								<a class="nav-link text-dark" asp-area="" asp-controller="Rapor" asp-action="Index">Raporlar</a>
 							</li>
+
 							@if (Context.Session.GetString("KullaniciRol") == "Admin")
 							{
 							<li class="nav-item">
 								<a class="nav-link text-dark" asp-area="" asp-controller="Kullanici" asp-action="Index">Kullanıcılar</a>
+							</li>
+							<li class="nav-item">
+								<a class="nav-link text-dark" asp-area="" asp-controller="Zimmet" asp-action="IslemGecmisi">İşlem Geçmişi</a>
 							</li>
 							}
 							}
@@ -63,12 +66,10 @@
 							<li class="nav-item">
 								<span class="nav-link text-dark">👤 @Context.Session.GetString("KullaniciAdi")</span>
 							</li>
-
 							<!-- Şifre Değiştir Butonu -->
 							<li class="nav-item">
 								<a class="nav-link text-dark" asp-controller="Login" asp-action="SifreDegistir">Şifre Değiştir</a>
 							</li>
-
 							<li class="nav-item">
 								<a class="nav-link text-dark" asp-controller="Login" asp-action="Cikis">Çıkış Yap</a>
 							</li>
