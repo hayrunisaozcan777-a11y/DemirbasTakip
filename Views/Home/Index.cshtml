@@ -50,6 +50,26 @@
         </div>
     </div>
 
+    <!-- Grafikler -->
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <div class="card shadow-sm">
+                <div class="card-header bg-light"><strong>Kategoriye Göre Demirbaş Dağılımı</strong></div>
+                <div class="card-body">
+                    <canvas id="kategoriGrafik"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card shadow-sm">
+                <div class="card-header bg-light"><strong>Zimmet Durumu</strong></div>
+                <div class="card-body">
+                    <canvas id="durumGrafik"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Son Zimmetler Tablosu -->
     <div class="card shadow-sm">
         <div class="card-header bg-light">
@@ -98,3 +118,36 @@
         </div>
     </div>
 </div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script>
+        const kategoriCtx = document.getElementById('kategoriGrafik');
+        new Chart(kategoriCtx, {
+            type: 'pie',
+            data: {
+                labels: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.KategoriEtiketleri)),
+                datasets: [{
+                    data: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.KategoriSayilari)),
+                    backgroundColor: ['#0d6efd', '#198754', '#ffc107', '#6c757d', '#dc3545']
+                }]
+            }
+        });
+
+        const durumCtx = document.getElementById('durumGrafik');
+        new Chart(durumCtx, {
+            type: 'bar',
+            data: {
+                labels: ['Zimmetli', 'İade Edildi'],
+                datasets: [{
+                    label: 'Adet',
+                    data: [@Model.ZimmetliSayisi, @Model.IadeEdilmisSayisi],
+                    backgroundColor: ['#0dcaf0', '#6c757d']
+                }]
+            },
+            options: {
+                scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } }
+            }
+        });
+    </script>
+}

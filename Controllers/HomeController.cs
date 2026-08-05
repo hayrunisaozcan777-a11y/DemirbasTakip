@@ -32,8 +32,19 @@ namespace DemirbasTakip.Controllers
                     .Include(z => z.Demirbas)
                     .OrderByDescending(z => z.ZimmetTarihi)
                     .Take(5)
-                    .ToListAsync()
+                    .ToListAsync(),
+                ZimmetliSayisi = await _context.Zimmetler.CountAsync(z => z.Durum == ZimmetDurumu.Aktif),
+                IadeEdilmisSayisi = await _context.Zimmetler.CountAsync(z => z.Durum == ZimmetDurumu.IadeEdildi)
             };
+
+            var kategoriGruplari = await _context.Demirbaslar
+                .GroupBy(d => d.Kategori)
+                .Select(g => new { Kategori = g.Key, Sayi = g.Count() })
+                .ToListAsync();
+
+            vm.KategoriEtiketleri = kategoriGruplari.Select(k => k.Kategori.ToString()).ToList();
+            vm.KategoriSayilari = kategoriGruplari.Select(k => k.Sayi).ToList();
+
             return View(vm);
         }
 
