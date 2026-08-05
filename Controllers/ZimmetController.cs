@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using DemirbasTakip.Data;
 using DemirbasTakip.Filters;
+using DemirbasTakip.Helpers;
 using DemirbasTakip.Models;
 using DemirbasTakip.ViewModels;
 
@@ -75,6 +76,10 @@ namespace DemirbasTakip.Controllers
 
             _context.Zimmetler.Add(zimmet);
             await _context.SaveChangesAsync();
+
+            await LogHelper.KaydetAsync(_context, HttpContext.Session.GetString("KullaniciAdi") ?? "Bilinmeyen",
+                "Zimmet Oluşturuldu", $"Demirbaş ID: {vm.DemirbasId}, Personel ID: {vm.PersonelId}");
+
             TempData["Basarili"] = "Zimmet işlemi başarıyla oluşturuldu.";
             return RedirectToAction(nameof(Index));
         }
@@ -115,6 +120,10 @@ namespace DemirbasTakip.Controllers
             }
 
             await _context.SaveChangesAsync();
+
+            await LogHelper.KaydetAsync(_context, HttpContext.Session.GetString("KullaniciAdi") ?? "Bilinmeyen",
+                "Zimmet İade Alındı", $"Zimmet ID: {id}");
+
             TempData["Basarili"] = "İade işlemi tamamlandı.";
             return RedirectToAction(nameof(Index));
         }

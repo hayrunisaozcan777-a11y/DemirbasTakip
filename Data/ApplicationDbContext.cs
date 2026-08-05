@@ -14,6 +14,7 @@ namespace DemirbasTakip.Data
         public DbSet<Personel> Personeller => Set<Personel>();
         public DbSet<Demirbas> Demirbaslar => Set<Demirbas>();
         public DbSet<Zimmet> Zimmetler => Set<Zimmet>();
+        public DbSet<IslemLog> IslemLoglari => Set<IslemLog>();
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
