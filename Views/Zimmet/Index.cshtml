@@ -14,18 +14,6 @@
 
 <div class="row g-2 mb-3">
     <div class="col-auto">
-        <select name="demirbasId" class="form-select" id="demirbasSelect">
-            <option value="">Tüm Demirbaşlar</option>
-            @if (ViewBag.Demirbaslar != null)
-            {
-                foreach (var item in (SelectList)ViewBag.Demirbaslar)
-                {
-                    <option value="@item.Value">@item.Text</option>
-                }
-            }
-        </select>
-    </div>
-    <div class="col-auto">
         <input type="text" id="zimmetAramaInput" value="@Context.Request.Query["personelAdi"]" class="form-control" placeholder="Personel veya demirbaş ara..." />
     </div>
     <div class="col-auto">
@@ -95,7 +83,7 @@
 
 @section Scripts {
     <script>
-        document.getElementById('zimmetAramaInput').addEventListener('keyup', function () {
+        document.getElementById('zimmetAramaInput').addEventListener('input', function () {
             let arananDeger = this.value.toLowerCase().trim();
             let satirlar = document.querySelectorAll('#zimmetTablosu tbody tr');
 
