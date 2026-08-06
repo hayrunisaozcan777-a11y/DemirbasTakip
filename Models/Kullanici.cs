@@ -25,8 +25,11 @@ namespace DemirbasTakip.Models
 
         public bool AktifMi { get; set; } = true;
 
-        // YENİ EKLENEN ALAN: İlk girişte / şifre sıfırlamada şifre değiştirme zorunluluğu
+        // İlk girişte / şifre sıfırlamada şifre değiştirme zorunluluğu
         public bool SifreDegistirilsinMi { get; set; } = false;
+
+        // YENİ EKLENEN ALAN: Yeni kayıtlar için onay durumu (Varsayılan false / Onay bekliyor)
+        public bool OnaylandiMi { get; set; } = false;
 
         public int? PersonelId { get; set; }
         public Personel? Personel { get; set; }

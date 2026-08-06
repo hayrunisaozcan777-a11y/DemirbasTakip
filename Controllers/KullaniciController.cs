@@ -21,6 +21,7 @@ namespace DemirbasTakip.Controllers
         public async Task<IActionResult> Index()
         {
             var liste = await _context.Kullanicilar
+                .Include(k => k.Personel)
                 .OrderBy(k => k.KullaniciAdi)
                 .ToListAsync();
 
@@ -56,13 +57,48 @@ namespace DemirbasTakip.Controllers
                 SifreHash = PasswordHasher.Hash(vm.Sifre),
                 Rol = vm.Rol,
                 AktifMi = true,
-                SifreDegistirilsinMi = false
+                SifreDegistirilsinMi = false,
+                OnaylandiMi = false // Yeni kullanıcı onay bekleyecek şekilde başlar
             };
 
             _context.Kullanicilar.Add(kullanici);
             await _context.SaveChangesAsync();
 
-            TempData["Basarili"] = "Kullanıcı başarıyla oluşturuldu.";
+            TempData["Basarili"] = "Kullanıcı başarıyla oluşturuldu, onay bekliyor.";
+            return RedirectToAction(nameof(Index));
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Onayla(int id)
+        {
+            var kullanici = await _context.Kullanicilar
+                .Include(k => k.Personel)
+                .FirstOrDefaultAsync(k => k.Id == id);
+
+            if (kullanici == null) return NotFound();
+
+            kullanici.OnaylandiMi = true;
+
+            if (kullanici.PersonelId == null)
+            {
+                var yeniPersonel = new Personel
+                {
+                    AdSoyad = kullanici.KullaniciAdi,
+                    Eposta = $"{kullanici.KullaniciAdi.ToLower()}@test.com",
+                    Departman = "Atanmadı",
+                    AktifMi = true
+                };
+
+                _context.Personeller.Add(yeniPersonel);
+                await _context.SaveChangesAsync();
+
+                kullanici.PersonelId = yeniPersonel.Id;
+            }
+
+            await _context.SaveChangesAsync();
+
+            TempData["Basarili"] = $"{kullanici.KullaniciAdi} başarıyla onaylandı ve personele eklendi.";
             return RedirectToAction(nameof(Index));
         }
 
@@ -87,15 +123,12 @@ namespace DemirbasTakip.Controllers
             var kullanici = await _context.Kullanicilar.FindAsync(id);
             if (kullanici == null) return NotFound();
 
-            // Varsayılan geçici şifre: 123456
             kullanici.SifreHash = PasswordHasher.Hash("123456");
-
-            // Şifre değiştirme zorunluluğunu aktif et
             kullanici.SifreDegistirilsinMi = true;
 
             await _context.SaveChangesAsync();
 
-            TempData["Basarili"] = $"{kullanici.KullaniciAdi} kullanıcısının şifresi '123456' olarak sıfırlandı. İlk girişte şifre değiştirmesi istenecek.";
+            TempData["Basarili"] = $"{kullanici.KullaniciAdi} kullanıcısının şifresi '123456' olarak sıfırlandı.";
             return RedirectToAction(nameof(Index));
         }
     }

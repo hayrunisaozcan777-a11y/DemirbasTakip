@@ -8,14 +8,22 @@
     <a asp-action="Create" class="btn btn-primary">+ Yeni Kullanıcı</a>
 </div>
 
+@if (TempData["Basarili"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        @TempData["Basarili"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
 <div class="card">
     <div class="card-body p-0">
-        <table class="table table-hover mb-0">
+        <table class="table table-hover mb-0 align-middle">
             <thead>
                 <tr>
                     <th>Kullanıcı Adı</th>
                     <th>Rol</th>
-                    <th>Durum</th>
+                    <th>Durum / Onay</th>
                     <th class="text-end">İşlemler</th>
                 </tr>
             </thead>
@@ -23,19 +31,36 @@
                 @foreach (var k in Model)
                 {
                     <tr>
-                        <td>@k.KullaniciAdi</td>
+                        <td><strong>@k.KullaniciAdi</strong></td>
                         <td>@k.Rol</td>
                         <td>
-                            @if (k.AktifMi)
+                            @if (k.OnaylandiMi)
                             {
-                                <span class="badge bg-success">Aktif</span>
+                                <span class="badge bg-success">Onaylandı</span>
                             }
                             else
                             {
-                                <span class="badge bg-secondary">Pasif</span>
+                                <span class="badge bg-warning text-dark">Onay Bekliyor</span>
+                            }
+
+                            @if (k.AktifMi)
+                            {
+                                <span class="badge bg-primary ms-1">Aktif</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-secondary ms-1">Pasif</span>
                             }
                         </td>
                         <td class="text-end">
+                            <!-- Onayla Butonu -->
+                            @if (!k.OnaylandiMi)
+                            {
+                                <form asp-action="Onayla" asp-route-id="@k.Id" method="post" class="d-inline" onsubmit="return confirm('@k.KullaniciAdi kullanıcısını onaylamak ve personele eklemek istiyor musunuz?');">
+                                    <button type="submit" class="btn btn-sm btn-success me-1">✔️ Onayla</button>
+                                </form>
+                            }
+
                             <!-- Şifre Sıfırla Formu ve Butonu -->
                             <form asp-action="SifreSifirla" asp-route-id="@k.Id" method="post" class="d-inline" onsubmit="return confirm('@k.KullaniciAdi kullanıcısının şifresi \'123456\' olarak sıfırlanacak. Onaylıyor musunuz?');">
                                 <button type="submit" class="btn btn-sm btn-outline-secondary me-1">🔑 Şifre Sıfırla</button>
