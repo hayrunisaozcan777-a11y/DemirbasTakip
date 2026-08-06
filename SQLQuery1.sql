@@ -1,0 +1,1 @@
+﻿UPDATE Kullanicilar SET OnaylandiMi = 1 WHERE KullaniciAdi = 'admin';

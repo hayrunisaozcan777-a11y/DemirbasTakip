@@ -58,13 +58,16 @@ namespace DemirbasTakip.Controllers
                 Rol = vm.Rol,
                 AktifMi = true,
                 SifreDegistirilsinMi = false,
-                OnaylandiMi = false // Yeni kullanıcı onay bekleyecek şekilde başlar
+                OnaylandiMi = (vm.Rol == KullaniciRol.Admin) // Admin ise direkt onaylı, Personel ise onay bekler
             };
 
             _context.Kullanicilar.Add(kullanici);
             await _context.SaveChangesAsync();
 
-            TempData["Basarili"] = "Kullanıcı başarıyla oluşturuldu, onay bekliyor.";
+            TempData["Basarili"] = kullanici.OnaylandiMi
+                ? "Admin kullanıcısı başarıyla oluşturuldu."
+                : "Kullanıcı başarıyla oluşturuldu, onay bekliyor.";
+
             return RedirectToAction(nameof(Index));
         }
 
