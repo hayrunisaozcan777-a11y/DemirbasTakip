@@ -34,11 +34,17 @@ namespace DemirbasTakip.Controllers
             var hash = PasswordHasher.Hash(model.Sifre);
 
             var kullanici = await _context.Kullanicilar
-                .FirstOrDefaultAsync(k => k.KullaniciAdi == model.KullaniciAdi && k.AktifMi);
+    .FirstOrDefaultAsync(k => k.KullaniciAdi == model.KullaniciAdi);
 
             if (kullanici == null || kullanici.SifreHash != hash)
             {
                 ModelState.AddModelError(string.Empty, "Kullanıcı adı veya şifre hatalı.");
+                return View(model);
+            }
+            // Yönetici tarafından pasifleştirildiyse
+            if (!kullanici.AktifMi)
+            {
+                ModelState.AddModelError(string.Empty, "Yönetici tarafından pasifleştirildiniz, giriş yapamazsınız.");
                 return View(model);
             }
 
